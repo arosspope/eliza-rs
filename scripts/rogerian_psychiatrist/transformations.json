@@ -1,0 +1,15 @@
+{
+  "dont" : ["don't"],
+  "cant" : ["can't"],
+  "wont" : ["won't"],
+  "remember" : ["recollect", "recall"],
+  "dreamed" : ["dreamt"],
+  "dream" : ["dreams"],
+  "perhaps" : ["maybe"],
+  "yes" : ["certainly"],
+  "computer" : ["machine", "machines", "computers"],
+  "was" : ["were"],
+  "you are" : ["you're"],
+  "i am" : ["i'm"],
+  "alike" : ["same", "identical", "equivalent"]
+}
