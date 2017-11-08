@@ -9,6 +9,12 @@ use fallbacks::Fallbacks;
 use synonyms::Synonyms;
 use transforms::Transforms;
 
+struct PhraseWords {
+    phrase : String,        //A phrase
+    words : Vec<String>,      //The words that make up the phrase
+}
+
+
 pub struct Eliza {
     greetings : Greetings,          //A collection of greetings to say 'hello'
     farewells : Farewells,          //A collection of farewells to say 'goodbye'
@@ -73,6 +79,7 @@ impl Eliza {
     }
 
     pub fn respond(&self, input: &str) -> String {
+        let phrases = get_phrases(input);
 
         self.fallback() //TODO: temporary test code
     }
@@ -85,6 +92,27 @@ impl Eliza {
     }
 }
 
+fn get_phrases(input: &str) -> Vec<PhraseWords> {
+    //TODO: This could probably be done better with lambdas
+    let mut phrases: Vec<PhraseWords> = Vec::new();
+
+    for split1 in input.split(","){
+        //We also need to split on periods as we are treating them as phrase boundaries
+        for split2 in split1.split("."){
+            let words = get_words(split2);
+            phrases.push(PhraseWords {
+                phrase: String::from(split2),
+                words });
+        }
+    }
+
+    phrases
+}
+
+fn get_words(phrase: &str) -> Vec<String> {
+    phrase.split_whitespace().map(|s| s.to_string()).collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -92,5 +120,22 @@ mod tests {
     #[test]
     fn loading_eliza_okay() {
         assert!(Eliza::new("scripts/rogerian_psychiatrist").is_ok());
+    }
+
+    #[test]
+    fn phrase_spliting(){
+        let phrases = get_phrases("Hello how are you, you look good. Let    me know what you think,of me?");
+
+        //check phrases are correct
+        assert_eq!("Hello how are you", phrases[0].phrase);
+        assert_eq!(" you look good", phrases[1].phrase);
+        assert_eq!(" Let    me know what you think", phrases[2].phrase);
+        assert_eq!("of me?", phrases[3].phrase);
+
+        //check words are correct
+        assert_eq!(vec!("Hello", "how", "are", "you"), phrases[0].words);
+        assert_eq!(vec!("you", "look", "good"), phrases[1].words);
+        assert_eq!(vec!("Let", "me", "know", "what", "you", "think"), phrases[2].words);
+        assert_eq!(vec!("of", "me?"), phrases[3].words);
     }
 }
