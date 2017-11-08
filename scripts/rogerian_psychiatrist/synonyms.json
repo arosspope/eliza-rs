@@ -1,10 +1,36 @@
 {
-  "be": ["am", "is", "are", "was"],
-  "belief": ["feel", "think", "believe", "wish"],
-  "cannot": ["can't"],
-  "desire": ["want", "need"],
-  "everyone": ["everybody", "nobody", "noone"],
-  "family": ["mother", "mom", "father", "dad", "sister", "brother", "wife", "children", "child"],
-  "happy": ["elated", "glad", "better"],
-  "sad": ["unhappy", "depressed", "sick"]
+  "synonyms" : [
+    {
+      "word" : "be",
+      "equivalents" : ["am", "is", "are", "was"]
+    },
+    {
+      "word" : "belief",
+      "equivalents" : ["feel", "think", "believe", "wish"]
+    },
+    {
+      "word" : "cannot",
+      "equivalents" : ["can't"]
+    },
+    {
+      "word" : "desire",
+      "equivalents" : ["want", "need"]
+    },
+    {
+      "word" : "everyone",
+      "equivalents" : ["everybody", "nobody", "noone"]
+    },
+    {
+      "word" : "family",
+      "equivalents" : ["mother", "mom", "father", "dad", "sister", "brother", "wife", "children", "child"]
+    },
+    {
+      "word" : "happy",
+      "equivalents" : ["elated", "glad", "better"]
+    },
+    {
+      "word" : "happy",
+      "equivalents" : ["unhappy", "depressed", "sick"]
+    }
+  ]
 }

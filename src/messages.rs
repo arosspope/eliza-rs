@@ -16,8 +16,6 @@ impl Messages {
         let path = PathBuf::from(path).join(filename);
 
         let file = File::open(path.as_path())?;
-
-        // Read the JSON contents of the file as an instance of `Keywords`.
         let u = serde_json::from_reader(file)?;
 
         Ok(u)

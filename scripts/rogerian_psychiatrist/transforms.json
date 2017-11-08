@@ -1,0 +1,56 @@
+{
+  "transform" : [
+    {
+      "word" : "dont",
+      "equivalents" : ["can't"]
+    },
+    {
+      "word" : "cant",
+      "equivalents":["can't"]
+    },
+    {
+      "word" : "wont",
+      "equivalents" : ["won't"]
+    },
+    {
+      "word" : "remember",
+      "equivalents" : ["recollect", "recall"]
+    },
+    {
+      "word" : "dreamed",
+      "equivalents" : ["dreamt"]
+    },
+    {
+      "word" : "dream",
+      "equivalents" : ["dreams"]
+    },
+    {
+      "word" : "perhaps",
+      "equivalents" : ["maybe"]
+    },
+    {
+      "word" : "yes",
+      "equivalents" : ["certainly"]
+    },
+    {
+      "word" : "computer",
+      "equivalents" : ["machine", "machines", "computers"]
+    },
+    {
+      "word" : "was",
+      "equivalents" : ["were"]
+    },
+    {
+      "word" : "you are",
+      "equivalents" : ["you're"]
+    },
+    {
+      "word" : "i am",
+      "equivalents" : ["i'm"]
+    },
+    {
+      "word" : "alike",
+      "equivalents" : ["same", "identical", "equivalent"]
+    }
+  ]
+}

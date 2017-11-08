@@ -1,34 +1,34 @@
 {
   "reflections" : [
     {
-      "actual" : "am",
+      "word" : "am",
       "inverse" : "are",
       "twoway" : false
     },
     {
-      "actual" : "your",
+      "word" : "your",
       "inverse" : "my",
       "twoway" : true
     },
     {
-      "actual" : "me",
+      "word" : "me",
       "inverse" : "you",
       "twoway" : false
     },
     {
-      "actual" : "myself",
+      "word" : "myself",
       "inverse" : "yourself",
       "twoway" : true
     },
     {
-      "actual" : "i",
+      "word" : "i",
       "inverse" : "you",
       "twoway" : true
     },
     {
-      "actual" : "i am",
+      "word" : "i am",
       "inverse" : "you are",
       "twoway" : false
-    },
+    }
   ]
 }
