@@ -40,7 +40,8 @@ fn main() {
 
         match input.as_ref() {
             "/quit\n" => break,
-            _ => println!("Go on..."), //eliza would create 'intelligent' response to their input
+            //Based on the rules in the script, eliza responds to the given input
+            _ => println!("{}", eliza.respond(&input)),
         }
     }
 

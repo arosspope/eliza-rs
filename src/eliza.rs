@@ -9,12 +9,13 @@ use synonyms::Synonyms;
 use transforms::Transforms;
 
 pub struct Eliza {
-    greetings : Greetings,
-    farewells : Farewells,
-    kwords : Keywords,
-    transforms : Transforms,
-    synonyms : Synonyms,
-    reflections : Reflections,
+    greetings : Greetings,          //A collection of greetings to say 'hello'
+    farewells : Farewells,          //A collection of farewells to say 'goodbye'
+    kwords : Keywords,              //A collection of keywords and associated decomposition rules
+    transforms : Transforms,        //TODO: Things to transform in post processing?
+    synonyms : Synonyms,            //TODO: Common synonyms
+    reflections : Reflections,      //TODO: Applied before checking composition rules?
+    memory : Vec<String>,           //TODO: A collection of things the user has said in previous conversation
 }
 
 impl Eliza {
@@ -45,6 +46,7 @@ impl Eliza {
                 println!("  Loading reflections...");
                 Reflections::load(script_location)?
             },
+            memory: Vec::new(),
         };
 
         Ok(e)
@@ -62,6 +64,11 @@ impl Eliza {
             Some(farwell) => farwell.to_string(),
             None => String::from("Goodbye."), //If farewells are empty, have default
         }
+    }
+
+    pub fn respond(&self, input: &str) -> String {
+
+        String::from("Go on...") //TODO: temporary test code
     }
 }
 
