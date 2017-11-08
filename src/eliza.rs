@@ -79,7 +79,10 @@ impl Eliza {
     }
 
     pub fn respond(&self, input: &str) -> String {
-        let phrases = get_phrases(input);
+        let phraseWords = get_phrases(input);
+
+        //pass through each phrase -> and use transform.json to swap out words for others
+        //TODO: will need to only create the PhraseWord struct once we have done this.
 
         self.fallback() //TODO: temporary test code
     }
