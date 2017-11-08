@@ -79,9 +79,9 @@ impl Eliza {
     }
 
     pub fn respond(&self, input: &str) -> String {
-        //let transformed =
-
-        let phrase_words = get_phrase_words(input);
+        //Convert the input to lowercase and replace certain words before splitting up the input
+        //into phrases and their word parts
+        let phrase_words = get_phrase_words(&self.transform_input(&input.to_lowercase()));
 
         //pass through each phrase -> and use transform.json to swap out words for others
         //TODO: will need to only create the PhraseWord struct once we have done this.
@@ -97,14 +97,10 @@ impl Eliza {
     }
 
     fn transform_input(&self, input: &str) -> String {
-        //let mut transformed = input;
         let mut transformed = String::from(input);
-
         for t in &self.transforms.transforms {
             let replacement = &t.word;
-
             for equivalent in &t.equivalents {
-                //let e = &equivalent.clone();
                 transformed = transformed.replace(equivalent, &replacement);
             }
         }
@@ -112,7 +108,6 @@ impl Eliza {
         transformed
     }
 }
-
 
 fn get_phrase_words(input: &str) -> Vec<PhraseWords> {
     let mut phrase_words: Vec<PhraseWords> = Vec::new();
