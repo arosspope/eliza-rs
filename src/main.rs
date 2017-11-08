@@ -8,6 +8,7 @@ mod eliza;
 mod keywords;
 mod farewells;
 mod greetings;
+mod fallbacks;
 mod reflections;
 mod synonyms;
 mod transforms;

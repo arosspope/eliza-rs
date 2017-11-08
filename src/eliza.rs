@@ -5,12 +5,14 @@ use reflections::Reflections;
 use keywords::Keywords;
 use greetings::Greetings;
 use farewells::Farewells;
+use fallbacks::Fallbacks;
 use synonyms::Synonyms;
 use transforms::Transforms;
 
 pub struct Eliza {
     greetings : Greetings,          //A collection of greetings to say 'hello'
     farewells : Farewells,          //A collection of farewells to say 'goodbye'
+    fallbacks : Fallbacks,          //A collection of fallback phrases to use, when eliza doesnt know what to do
     kwords : Keywords,              //A collection of keywords and associated decomposition rules
     transforms : Transforms,        //TODO: Things to transform in post processing?
     synonyms : Synonyms,            //TODO: Common synonyms
@@ -29,6 +31,10 @@ impl Eliza {
             farewells: {
                 println!("  Loading farewells...");
                 Farewells::load(script_location)?
+            },
+            fallbacks: {
+                println!("  Loading fallbacks...");
+                Fallbacks::load(script_location)?
             },
             kwords: {
                 println!("  Loading keywords...");
@@ -68,7 +74,14 @@ impl Eliza {
 
     pub fn respond(&self, input: &str) -> String {
 
-        String::from("Go on...") //TODO: temporary test code
+        self.fallback() //TODO: temporary test code
+    }
+
+    fn fallback(&self) -> String {
+        match self.fallbacks.random(){
+            Some(fallback) => fallback.to_string(),
+            None => String::from("Go on."), //A fallback for the fallback - har har
+        }
     }
 }
 

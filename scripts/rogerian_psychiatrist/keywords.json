@@ -1,25 +1,6 @@
 {
   "keywords" : [
     {
-      "key" : "NONE",
-      "memorise" : false,
-			"rank" : 0,
-      "rules" : [
-        {
-          "decomposition" : "*",
-          "reconstruction" : [
-            "I'm not sure I understand you fully.",
-            "Please go on.",
-            "What does that suggest to you ?",
-            "Do you feel strongly about discussing such things ?",
-            "That is interesting.  Please continue.",
-            "Tell me more about that.",
-            "Does talking about this bother you ?"
-          ]
-        }
-      ]
-    },
-    {
       "key" : "sorry",
 			"memorise" : false,
 			"rank" : 0,
