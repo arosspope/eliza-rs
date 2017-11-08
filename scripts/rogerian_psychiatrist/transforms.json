@@ -1,5 +1,5 @@
 {
-  "transform" : [
+  "transforms" : [
     {
       "word" : "dont",
       "equivalents" : ["can't"]
