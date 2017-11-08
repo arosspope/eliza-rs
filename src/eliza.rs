@@ -2,18 +2,18 @@ use std::error::Error;
 
 use script_loader::ScriptLoader;
 use reflections::Reflections;
-use keywords::Keywords;
+use keywords::{Keywords, Keyword};
 use greetings::Greetings;
 use farewells::Farewells;
 use fallbacks::Fallbacks;
 use synonyms::Synonyms;
 use transforms::Transforms;
 
+#[derive(Debug, Clone)]
 struct PhraseWords {
-    phrase : String,        //A phrase
-    words : Vec<String>,      //The words that make up the phrase
+    phrase : String,      //A phrase
+    words : Vec<String>,  //The words that make up the phrase
 }
-
 
 pub struct Eliza {
     greetings : Greetings,          //A collection of greetings to say 'hello'
@@ -81,12 +81,23 @@ impl Eliza {
     pub fn respond(&self, input: &str) -> String {
         //Convert the input to lowercase and replace certain words before splitting up the input
         //into phrases and their word parts
-        let phrase_words = get_phrase_words(&self.transform_input(&input.to_lowercase()));
+        let mut response = String::new();
+        let mut phrase_words = get_phrase_words(&self.transform_input(&input.to_lowercase()));
 
+        let (phrase_pos, keystack) = self.populate_keystack(phrase_words);
         //pass through each phrase -> and use transform.json to swap out words for others
         //TODO: will need to only create the PhraseWord struct once we have done this.
 
-        self.fallback() //TODO: temporary test code
+        if let Some(pos) = phrase_pos {
+            //let phrase_to_decompose = phrase_words[pos];
+        } else if false {
+            //TODO: do memory trick
+        } else {
+            //Nothing else to try, use fallback trick
+            response = self.fallback();
+        }
+
+        response
     }
 
     fn fallback(&self) -> String {
@@ -107,11 +118,32 @@ impl Eliza {
 
         transformed
     }
+
+    fn populate_keystack(&self, phrase_words: Vec<PhraseWords>) -> (Option<usize>, Vec<Keyword>)
+    {
+        let mut keystack: Vec<Keyword> = Vec::new();
+        let mut phrase_pos: Option<usize> = None;
+
+        for (index, phrase) in phrase_words.iter_mut().enumerate() {
+            if phrase_pos.is_some() {
+                //A phrase with keywords was found, break as we don't care about other phrases
+                break;
+            }
+
+            for w in phrase.words {
+                if let Some(k) = self.kwords.keywords.iter().find(|ref k| k.key == w){
+                    keystack.push(k.clone());
+                    phrase_pos = Some(index);
+                }
+            }
+        }
+
+        (phrase_pos, keystack)
+    }
 }
 
 fn get_phrase_words(input: &str) -> Vec<PhraseWords> {
     let mut phrase_words: Vec<PhraseWords> = Vec::new();
-
     for p in get_phrases(input) {
         phrase_words.push(PhraseWords {
             phrase: String::from(p),
@@ -180,5 +212,10 @@ mod tests {
         assert_eq!(vec!("you", "look", "good"), phrases[1].words);
         assert_eq!(vec!("Let", "me", "know", "what", "you", "think"), phrases[2].words);
         assert_eq!(vec!("of", "me?"), phrases[3].words);
+    }
+
+    #[test]
+    fn keylist(){
+        let e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
     }
 }
