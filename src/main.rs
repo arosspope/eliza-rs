@@ -16,6 +16,11 @@ mod script_loader;
 use eliza::Eliza;
 
 fn main() {
+    //TODO: Munge script parts into one script
+    //TODO: Fallback script
+    //TODO: All print statements (expect elisa response) should go to info or warn or error
+    //TODO: memorise keywords0
+    //TODO: unit tests
     println!("ELIZA begin");
     //eliza init -> loads eliza script (could use cmdline arg for script location)
 

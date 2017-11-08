@@ -2,7 +2,8 @@
   "keywords" : [
     {
       "key" : "NONE",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*",
@@ -20,7 +21,8 @@
     },
     {
       "key" : "sorry",
-      "rank" : 0,
+			"memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*",
@@ -35,7 +37,8 @@
     },
     {
       "key" : "apologise",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*",
@@ -47,7 +50,8 @@
     },
     {
       "key" : "remember",
-      "rank" : 5,
+      "memorise" : false,
+			"rank" : 5,
       "rules" : [
         {
           "decomposition" : "* i remember *",
@@ -83,7 +87,8 @@
     },
     {
       "key" : "forget",
-      "rank" : 5,
+      "memorise" : false,
+			"rank" : 5,
       "rules" : [
         {
           "decomposition" : "* i forget *",
@@ -112,7 +117,8 @@
     },
     {
       "key" : "if",
-      "rank" : 3,
+      "memorise" : false,
+			"rank" : 3,
       "rules" : [
         {
           "decomposition" : "* if *",
@@ -130,7 +136,8 @@
     },
     {
       "key" : "dreamed",
-      "rank" : 4,
+      "memorise" : false,
+			"rank" : 4,
       "rules" : [
         {
           "decomposition" : "* i dreamed *",
@@ -145,7 +152,8 @@
     },
     {
       "key" : "dream",
-      "rank" : 3,
+      "memorise" : false,
+			"rank" : 3,
       "rules" : [
         {
           "decomposition" : "*",
@@ -160,7 +168,8 @@
     },
     {
       "key" : "perhaps",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*",
@@ -177,7 +186,8 @@
     },
     {
       "key" : "name",
-      "rank" : 15,
+      "memorise" : false,
+			"rank" : 15,
       "rules" : [
         {
           "decomposition" : "*",
@@ -190,7 +200,8 @@
     },
     {
       "key" : "hello",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*",
@@ -203,7 +214,8 @@
     },
     {
       "key" : "computer",
-      "rank" : 50,
+      "memorise" : false,
+			"rank" : 50,
       "rules" : [
         {
           "decomposition" : "*",
@@ -221,7 +233,8 @@
     },
     {
       "key" : "am",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "* am i *" ,
@@ -250,7 +263,8 @@
     },
     {
       "key" : "are",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "* are you *" ,
@@ -285,7 +299,8 @@
     },
     {
       "key" : "your",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "* your *" ,
@@ -302,7 +317,8 @@
     },
     {
       "key" : "was",
-      "rank" : 2,
+      "memorise" : false,
+			"rank" : 2,
       "rules" : [
         {
           "decomposition" : "* was i *" ,
@@ -337,7 +353,8 @@
     },
     {
       "key" : "i",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "* i @desire *" ,
@@ -448,7 +465,8 @@
     },
     {
       "key" : "you",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "* you remind me of *" ,
@@ -478,7 +496,8 @@
     },
     {
       "key" : "yes",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -493,7 +512,8 @@
     },
     {
       "key" : "no",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "* no one *" ,
@@ -520,7 +540,8 @@
     },
     {
       "key" : "my",
-      "rank" : 2,
+      "memorise" : false,
+			"rank" : 2,
       "rules" : [
         {
           "decomposition" : "$ * my *" ,
@@ -553,7 +574,8 @@
     },
     {
       "key" : "can",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "* can you *" ,
@@ -577,7 +599,8 @@
     },
     {
       "key" : "what",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -597,7 +620,8 @@
     },
     {
       "key" : "who",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -609,7 +633,8 @@
     },
     {
       "key" : "when",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -621,7 +646,8 @@
     },
     {
       "key" : "where",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -633,7 +659,8 @@
     },
     {
       "key" : "how",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -645,7 +672,8 @@
     },
     {
       "key" : "because",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -660,7 +688,8 @@
     },
     {
       "key" : "why",
-      "rank" : 0,
+      "memorise" : false,
+			"rank" : 0,
       "rules" : [
         {
           "decomposition" : "* why don't you *",
@@ -692,7 +721,8 @@
     },
     {
       "key" : "everyone",
-      "rank" : 2,
+      "memorise" : false,
+			"rank" : 2,
       "rules" : [
         {
           "decomposition" : "* @everyone *",
@@ -712,7 +742,8 @@
     },
     {
       "key" : "everybody",
-      "rank" : 2,
+      "memorise" : false,
+			"rank" : 2,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -724,7 +755,8 @@
     },
     {
       "key" : "nobody",
-      "rank" : 2,
+      "memorise" : false,
+			"rank" : 2,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -736,7 +768,8 @@
     },
     {
       "key" : "noone",
-      "rank" : 2,
+      "memorise" : false,
+			"rank" : 2,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -748,7 +781,8 @@
     },
     {
       "key" : "always",
-      "rank" : 1,
+      "memorise" : false,
+			"rank" : 1,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -763,7 +797,8 @@
     },
     {
       "key" : "alike",
-      "rank" : 10,
+      "memorise" : false,
+			"rank" : 10,
       "rules" : [
         {
           "decomposition" : "*" ,
@@ -782,7 +817,8 @@
     },
     {
       "key" : "alike",
-      "rank" : 10,
+      "memorise" : false,
+			"rank" : 10,
       "rules" : [
         {
           "decomposition" : "* @be *like *" ,
@@ -794,6 +830,7 @@
     },
     {
       "key" : "different",
+      "memorise" : false,
       "rank" : 0,
       "rules" : [
         {

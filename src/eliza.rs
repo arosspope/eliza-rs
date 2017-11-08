@@ -64,3 +64,13 @@ impl Eliza {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn loading_eliza_okay() {
+        assert!(Eliza::new("scripts/rogerian_psychiatrist").is_ok());
+    }
+}

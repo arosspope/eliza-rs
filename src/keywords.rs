@@ -9,6 +9,7 @@ struct Rule {
 #[derive(Serialize, Deserialize, Debug)]
 struct Keyword {
     key : String,
+    memorise: bool,
     rank : u8,
     rules : Vec<Rule>,
 }
