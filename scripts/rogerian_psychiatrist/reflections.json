@@ -1,11 +1,34 @@
 {
-  "am" : "are",
-  "your" : "my",
-  "my" : "your",
-  "me" : "you",
-  "myself" : "yourself",
-  "yourself" : "myself",
-  "i" : "you",
-  "you" : "i",
-  "i am" : "you are"
+  "reflections" : [
+    {
+      "actual" : "am",
+      "inverse" : "are",
+      "twoway" : false
+    },
+    {
+      "actual" : "your",
+      "inverse" : "my",
+      "twoway" : true
+    },
+    {
+      "actual" : "me",
+      "inverse" : "you",
+      "twoway" : false
+    },
+    {
+      "actual" : "myself",
+      "inverse" : "yourself",
+      "twoway" : true
+    },
+    {
+      "actual" : "i",
+      "inverse" : "you",
+      "twoway" : true
+    },
+    {
+      "actual" : "i am",
+      "inverse" : "you are",
+      "twoway" : false
+    },
+  ]
 }
