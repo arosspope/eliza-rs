@@ -4,6 +4,7 @@ extern crate serde_derive;
 use std::io;
 use std::io::Write;
 
+mod eliza;
 mod keywords;
 mod farewells;
 mod greetings;
@@ -12,40 +13,18 @@ mod synonyms;
 mod transforms;
 mod script_loader;
 
-use script_loader::ScriptLoader;
-use reflections::Reflections;
-use keywords::Keywords;
-use greetings::Greetings;
-use farewells::Farewells;
-use synonyms::Synonyms;
-use transforms::Transforms;
+use eliza::Eliza;
 
 fn main() {
-    println!("ELIZA begin.");
-    println!("  Enter '/quit' to close session.");
+    println!("ELIZA begin");
     //eliza init -> loads eliza script (could use cmdline arg for script location)
-    //eliza greets the user
 
+    let eliza = Eliza::new("scripts/rogerian_psychiatrist").expect("Eliza failed to load");
+    println!();
+    println!("Enter '/quit' to leave the session.");
 
-    let kws = Keywords::load("scripts/rogerian_psychiatrist").unwrap();
-    let greetings = Greetings::load("scripts/rogerian_psychiatrist").unwrap();
-    let farewells = Farewells::load("scripts/rogerian_psychiatrist").unwrap();
-    let reflections = Reflections::load("scripts/rogerian_psychiatrist");
-    let synonyms = Synonyms::load("scripts/rogerian_psychiatrist");
-    let transforms = Transforms::load("scripts/rogerian_psychiatrist");
-
-    // let t = match result {
-    //     Ok(t) => result,
-    //     Err(error) => {
-    //         panic!("There was a problem opening the file: {:?}", error)
-    //     },
-    // };
-
-    if let Some(greeting) = greetings.random() {
-        println!("{}", greeting);
-    } else {
-        println!("Howdy!");
-    }
+    println!();
+    println!("{}", eliza.greet()); //eliza greets the user
 
     loop {
         print!("> ");
@@ -61,9 +40,6 @@ fn main() {
     }
 
     //eliza farewells the user
-    if let Some(farewell) = farewells.random() {
-        println!("{}", farewell);
-    } else {
-        println!("Bye!");
-    }
+    println!();
+    println!("{}", eliza.farewell());
 }
