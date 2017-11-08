@@ -5,14 +5,18 @@ use std::io;
 use std::io::Write;
 
 mod keywords;
-mod messages;
+mod farewells;
+mod greetings;
 mod reflections;
 mod synonyms;
 mod transforms;
+mod script_loader;
 
+use script_loader::ScriptLoader;
 use reflections::Reflections;
 use keywords::Keywords;
-use messages::Messages;
+use greetings::Greetings;
+use farewells::Farewells;
 use synonyms::Synonyms;
 use transforms::Transforms;
 
@@ -24,13 +28,11 @@ fn main() {
 
 
     let kws = Keywords::load("scripts/rogerian_psychiatrist").unwrap();
-    let greetings = Messages::load("scripts/rogerian_psychiatrist", "greetings.json").unwrap();
-    let farewells = Messages::load("scripts/rogerian_psychiatrist", "farewells.json").unwrap();
+    let greetings = Greetings::load("scripts/rogerian_psychiatrist").unwrap();
+    let farewells = Farewells::load("scripts/rogerian_psychiatrist").unwrap();
     let reflections = Reflections::load("scripts/rogerian_psychiatrist");
     let synonyms = Synonyms::load("scripts/rogerian_psychiatrist");
     let transforms = Transforms::load("scripts/rogerian_psychiatrist");
-
-    println!("{:#?}", transforms);
 
     // let t = match result {
     //     Ok(t) => result,

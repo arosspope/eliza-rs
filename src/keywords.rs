@@ -1,8 +1,4 @@
-extern crate serde_json;
-
-use std::error::Error;
-use std::fs::File;
-use std::path::PathBuf;
+use script_loader::ScriptLoader;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Rule {
@@ -22,17 +18,10 @@ pub struct Keywords {
     keywords: Vec<Keyword>,
 }
 
-impl Keywords {
-    pub fn load(s: &str) -> Result<Keywords, Box<Error>> {
-        let mut path = PathBuf::from(s);
-        path.push("keywords.json");
+impl ScriptLoader for Keywords {
+    type Type = Keywords;
 
-        //let file = File::open(path.join("keywords.json"))?;
-        let file = File::open(path.as_path())?;
-
-        // Read the JSON contents of the file as an instance of `Keywords`.
-        let u = serde_json::from_reader(file)?;
-
-        Ok(u)
+    fn filename() -> String {
+        String::from("keywords.json")
     }
 }
