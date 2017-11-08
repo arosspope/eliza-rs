@@ -2,7 +2,7 @@
   "transforms" : [
     {
       "word" : "dont",
-      "equivalents" : ["can't"]
+      "equivalents" : ["don't"]
     },
     {
       "word" : "cant",

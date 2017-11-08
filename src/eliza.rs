@@ -79,7 +79,9 @@ impl Eliza {
     }
 
     pub fn respond(&self, input: &str) -> String {
-        let phraseWords = get_phrases(input);
+        //let transformed =
+
+        let phrase_words = get_phrase_words(input);
 
         //pass through each phrase -> and use transform.json to swap out words for others
         //TODO: will need to only create the PhraseWord struct once we have done this.
@@ -93,23 +95,40 @@ impl Eliza {
             None => String::from("Go on."), //A fallback for the fallback - har har
         }
     }
+
+    fn transform_input(&self, input: &str) -> String {
+        //let mut transformed = input;
+        let mut transformed = String::from(input);
+
+        for t in &self.transforms.transforms {
+            let replacement = &t.word;
+
+            for equivalent in &t.equivalents {
+                //let e = &equivalent.clone();
+                transformed = transformed.replace(equivalent, &replacement);
+            }
+        }
+
+        transformed
+    }
 }
 
-fn get_phrases(input: &str) -> Vec<PhraseWords> {
-    //TODO: This could probably be done better with lambdas
-    let mut phrases: Vec<PhraseWords> = Vec::new();
 
-    for split1 in input.split(","){
-        //We also need to split on periods as we are treating them as phrase boundaries
-        for split2 in split1.split("."){
-            let words = get_words(split2);
-            phrases.push(PhraseWords {
-                phrase: String::from(split2),
-                words });
-        }
+fn get_phrase_words(input: &str) -> Vec<PhraseWords> {
+    let mut phrase_words: Vec<PhraseWords> = Vec::new();
+
+    for p in get_phrases(input) {
+        phrase_words.push(PhraseWords {
+            phrase: String::from(p),
+            words: get_words(p),
+        })
     }
 
-    phrases
+    phrase_words
+}
+
+fn get_phrases(input: &str) -> Vec<&str> {
+    input.split(|c| c == '.' || c == ',').collect()
 }
 
 fn get_words(phrase: &str) -> Vec<String> {
@@ -126,8 +145,34 @@ mod tests {
     }
 
     #[test]
+    fn transform(){
+        let e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
+
+        let t1 = "computers will one day be the superior machine.";
+        let t2 = "you're not wrong there.";
+        let t3 = "In some ways, you are identical to my father.";
+        let t4 = "I can't recollect.";
+
+        assert_eq!("computer will one day be the superior computer.", e.transform_input(t1));
+        assert_eq!("you are not wrong there.", e.transform_input(t2));
+        assert_eq!("In some ways, you are alike to my father.", e.transform_input(t3));
+        assert_eq!("I cant remember.", e.transform_input(t4));
+    }
+
+    #[test]
     fn phrase_spliting(){
         let phrases = get_phrases("Hello how are you, you look good. Let    me know what you think,of me?");
+
+        //check phrases are correct
+        assert_eq!("Hello how are you", phrases[0]);
+        assert_eq!(" you look good", phrases[1]);
+        assert_eq!(" Let    me know what you think", phrases[2]);
+        assert_eq!("of me?", phrases[3]);
+    }
+
+    #[test]
+    fn phrase_word_spliting(){
+        let phrases = get_phrase_words("Hello how are you, you look good. Let    me know what you think,of me?");
 
         //check phrases are correct
         assert_eq!("Hello how are you", phrases[0].phrase);
