@@ -82,16 +82,16 @@ impl Eliza {
         //Convert the input to lowercase and replace certain words before splitting up the input
         //into phrases and their word parts
         let mut response = String::new();
-        let mut phrase_words = get_phrase_words(&self.transform_input(&input.to_lowercase()));
+        let phrases = get_phrases(&self.transform_input(&input.to_lowercase()));
 
-        let (phrase_pos, keystack) = self.populate_keystack(phrase_words);
-        //pass through each phrase -> and use transform.json to swap out words for others
+        let (active_phrase, keystack) = self.populate_keystack(phrases);
         //TODO: will need to only create the PhraseWord struct once we have done this.
 
-        if let Some(pos) = phrase_pos {
+        if let Some(phrase) = active_phrase {
             //let phrase_to_decompose = phrase_words[pos];
+            response = String::from("we got a match");
         } else if false {
-            //TODO: do memory trick
+            response = String::from("no match");
         } else {
             //Nothing else to try, use fallback trick
             response = self.fallback();
@@ -119,43 +119,34 @@ impl Eliza {
         transformed
     }
 
-    fn populate_keystack(&self, phrase_words: Vec<PhraseWords>) -> (Option<usize>, Vec<Keyword>)
+    fn populate_keystack(&self, phrases: Vec<String>) -> (Option<String>, Vec<Keyword>)
     {
         let mut keystack: Vec<Keyword> = Vec::new();
-        let mut phrase_pos: Option<usize> = None;
+        let mut active_phrase: Option<String> = None;
 
-        for (index, phrase) in phrase_words.iter_mut().enumerate() {
-            if phrase_pos.is_some() {
+        for phrase in phrases {
+            if active_phrase.is_some() {
                 //A phrase with keywords was found, break as we don't care about other phrases
                 break;
             }
 
-            for w in phrase.words {
-                if let Some(k) = self.kwords.keywords.iter().find(|ref k| k.key == w){
+            let words = get_words(&phrase);
+
+            for word in words {
+                if let Some(k) = self.kwords.keywords.iter().find(|ref k| k.key == word){
                     keystack.push(k.clone());
-                    phrase_pos = Some(index);
+                    active_phrase = Some(phrase.clone());
                 }
             }
+
         }
 
-        (phrase_pos, keystack)
+        (active_phrase, keystack)
     }
 }
 
-fn get_phrase_words(input: &str) -> Vec<PhraseWords> {
-    let mut phrase_words: Vec<PhraseWords> = Vec::new();
-    for p in get_phrases(input) {
-        phrase_words.push(PhraseWords {
-            phrase: String::from(p),
-            words: get_words(p),
-        })
-    }
-
-    phrase_words
-}
-
-fn get_phrases(input: &str) -> Vec<&str> {
-    input.split(|c| c == '.' || c == ',').collect()
+fn get_phrases(input: &str) -> Vec<String> {
+    input.split(|c| c == '.' || c == ',').map(|s| s.to_string()).collect()
 }
 
 fn get_words(phrase: &str) -> Vec<String> {
@@ -198,20 +189,9 @@ mod tests {
     }
 
     #[test]
-    fn phrase_word_spliting(){
-        let phrases = get_phrase_words("Hello how are you, you look good. Let    me know what you think,of me?");
-
-        //check phrases are correct
-        assert_eq!("Hello how are you", phrases[0].phrase);
-        assert_eq!(" you look good", phrases[1].phrase);
-        assert_eq!(" Let    me know what you think", phrases[2].phrase);
-        assert_eq!("of me?", phrases[3].phrase);
-
-        //check words are correct
-        assert_eq!(vec!("Hello", "how", "are", "you"), phrases[0].words);
-        assert_eq!(vec!("you", "look", "good"), phrases[1].words);
-        assert_eq!(vec!("Let", "me", "know", "what", "you", "think"), phrases[2].words);
-        assert_eq!(vec!("of", "me?"), phrases[3].words);
+    fn word_splitting(){
+        let words = get_words("Hello how are you");
+        assert_eq!(vec!("Hello", "how", "are", "you"), words);
     }
 
     #[test]
