@@ -138,15 +138,17 @@ impl Eliza {
                     active_phrase = Some(phrase.clone());
                 }
             }
-
         }
+
+        //sort the keystack with highest rank first
+        keystack.sort_by(|a,b| b.rank.cmp(&a.rank));
 
         (active_phrase, keystack)
     }
 }
 
 fn get_phrases(input: &str) -> Vec<String> {
-    input.split(|c| c == '.' || c == ',').map(|s| s.to_string()).collect()
+    input.split(|c| c == '.' || c == ',' || c == '?').map(|s| s.to_string()).collect()
 }
 
 fn get_words(phrase: &str) -> Vec<String> {
@@ -185,13 +187,47 @@ mod tests {
         assert_eq!("Hello how are you", phrases[0]);
         assert_eq!(" you look good", phrases[1]);
         assert_eq!(" Let    me know what you think", phrases[2]);
-        assert_eq!("of me?", phrases[3]);
+        assert_eq!("of me", phrases[3]);
     }
 
     #[test]
     fn word_splitting(){
         let words = get_words("Hello how are you");
         assert_eq!(vec!("Hello", "how", "are", "you"), words);
+    }
+
+    #[test]
+    fn keystack_building(){
+        let e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
+
+        let phrases = get_phrases("hello how are you? i was feeling good today, but now i'm not.");
+        let (phrase, keystack) = e.populate_keystack(phrases);
+
+        assert_eq!("hello how are you", phrase.unwrap());
+        assert_eq!(4, keystack.len());
+        assert_eq!("hello", keystack[0].key);
+        assert_eq!("how", keystack[1].key);
+        assert_eq!("are", keystack[2].key);
+        assert_eq!("you", keystack[3].key);
+
+        let phrases = get_phrases("spagetti meatballs? i was feeling good today, but now...");
+        let (phrase, keystack) = e.populate_keystack(phrases);
+
+        assert_eq!(" i was feeling good today", phrase.unwrap());
+        assert_eq!(2, keystack.len());
+        assert_eq!("was", keystack[0].key);
+        assert_eq!("i", keystack[1].key);
+
+        //check rank ordering
+        let phrases = get_phrases("i love my dog - people think we are alike");
+        let (phrase, keystack) = e.populate_keystack(phrases);
+
+        assert_eq!("i love my dog - people think we are alike", phrase.unwrap());
+        assert_eq!(4, keystack.len());
+        assert_eq!("alike", keystack[0].key);
+        assert_eq!("my", keystack[1].key);
+        assert_eq!("i", keystack[2].key);
+        assert_eq!("are", keystack[3].key);
     }
 
     #[test]
