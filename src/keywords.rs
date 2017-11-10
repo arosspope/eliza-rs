@@ -2,6 +2,7 @@ use script_loader::ScriptLoader;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Rule {
+    pub memorise: bool,
     pub decomposition : String,
     pub reconstruction : Vec<String>,
 }
@@ -9,7 +10,6 @@ pub struct Rule {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Keyword {
     pub key : String,
-    pub memorise: bool,
     pub rank : u8,
     pub rules : Vec<Rule>,
 }

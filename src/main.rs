@@ -25,7 +25,7 @@ fn main() {
     println!("ELIZA begin");
     //eliza init -> loads eliza script (could use cmdline arg for script location)
 
-    let eliza = Eliza::new("scripts/rogerian_psychiatrist").expect("Eliza failed to load");
+    let mut eliza = Eliza::new("scripts/rogerian_psychiatrist").expect("Eliza failed to load");
     println!();
     println!("Enter '/quit' to leave the session.");
 

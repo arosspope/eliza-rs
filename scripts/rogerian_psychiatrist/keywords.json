@@ -2,11 +2,11 @@
   "keywords" : [
     {
       "key" : "sorry",
-			"memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*",
+          "memorise" : false,
+					"decomposition" : "*",
           "reconstruction" : [
             "Please don't apologise.",
             "Apologies are not necessary.",
@@ -18,11 +18,11 @@
     },
     {
       "key" : "apologise",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*",
+          "memorise" : false,
+					"decomposition" : "*",
           "reconstruction" : [
             "GOTO sorry"
           ]
@@ -31,11 +31,11 @@
     },
     {
       "key" : "remember",
-      "memorise" : false,
 			"rank" : 5,
       "rules" : [
         {
-          "decomposition" : "* i remember *",
+          "memorise" : false,
+					"decomposition" : "* i remember *",
           "reconstruction" : [
             "Do you often think of (2) ?",
             "Does thinking of (2) bring anything else to mind ?",
@@ -47,7 +47,8 @@
           ]
         },
         {
-          "decomposition" : "* do you remember *",
+          "memorise" : false,
+					"decomposition" : "* do you remember *",
           "reconstruction" : [
             "Did you think I would forget (2) ?",
             "Why do you think I should recall (2) now ?",
@@ -57,7 +58,8 @@
           ]
         },
         {
-          "decomposition" : "* you remember *",
+          "memorise" : false,
+					"decomposition" : "* you remember *",
           "reconstruction" : [
             "How could I forget (2) ?",
             "What about (2) should I remember ?",
@@ -68,11 +70,11 @@
     },
     {
       "key" : "forget",
-      "memorise" : false,
 			"rank" : 5,
       "rules" : [
         {
-          "decomposition" : "* i forget *",
+          "memorise" : false,
+					"decomposition" : "* i forget *",
           "reconstruction" : [
             "Can you think of why you might forget (2) ?",
             "Why can't you remember (2) ?",
@@ -84,7 +86,8 @@
           ]
         },
         {
-          "decomposition" : "* did you forget *",
+          "memorise" : false,
+					"decomposition" : "* did you forget *",
           "reconstruction" : [
             "Why do you ask ?",
             "Are you sure you told me ?",
@@ -98,11 +101,11 @@
     },
     {
       "key" : "if",
-      "memorise" : false,
 			"rank" : 3,
       "rules" : [
         {
-          "decomposition" : "* if *",
+          "memorise" : false,
+					"decomposition" : "* if *",
           "reconstruction" : [
             "Do you think it's likely that (2) ?",
             "Do you wish that (2) ?",
@@ -117,11 +120,11 @@
     },
     {
       "key" : "dreamed",
-      "memorise" : false,
 			"rank" : 4,
       "rules" : [
         {
-          "decomposition" : "* i dreamed *",
+          "memorise" : false,
+					"decomposition" : "* i dreamed *",
           "reconstruction" : [
             "Really, (2) ?",
             "Have you ever fantasized (2) while you were awake ?",
@@ -133,11 +136,11 @@
     },
     {
       "key" : "dream",
-      "memorise" : false,
 			"rank" : 3,
       "rules" : [
         {
-          "decomposition" : "*",
+          "memorise" : false,
+					"decomposition" : "*",
           "reconstruction" : [
             "Really, (2) ?",
             "Have you ever fantasized (2) while you were awake ?",
@@ -149,11 +152,11 @@
     },
     {
       "key" : "perhaps",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*",
+          "memorise" : false,
+					"decomposition" : "*",
           "reconstruction" : [
             "You don't seem quite certain.",
             "Why the uncertain tone ?",
@@ -167,11 +170,11 @@
     },
     {
       "key" : "name",
-      "memorise" : false,
 			"rank" : 15,
       "rules" : [
         {
-          "decomposition" : "*",
+          "memorise" : false,
+					"decomposition" : "*",
           "reconstruction" : [
             "I am not interested in names.",
             "I've told you before, I don't care about names -- please continue."
@@ -181,11 +184,11 @@
     },
     {
       "key" : "hello",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*",
+          "memorise" : false,
+					"decomposition" : "*",
           "reconstruction" : [
             "How do you do.  Please state your problem.",
             "Hi.  What seems to be your problem ?"
@@ -195,11 +198,11 @@
     },
     {
       "key" : "computer",
-      "memorise" : false,
 			"rank" : 50,
       "rules" : [
         {
-          "decomposition" : "*",
+          "memorise" : false,
+					"decomposition" : "*",
           "reconstruction" : [
             "Do computers worry you ?",
             "Why do you mention computers ?",
@@ -214,11 +217,11 @@
     },
     {
       "key" : "am",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "* am i *" ,
+          "memorise" : false,
+					"decomposition" : "* am i *" ,
           "reconstruction" : [
             "Do you believe you are (2) ?",
             "Would you want to be (2) ?",
@@ -228,13 +231,15 @@
           ]
         },
         {
-          "decomposition" : "* i am *" ,
+          "memorise" : false,
+					"decomposition" : "* i am *" ,
           "reconstruction" : [
             "GOTO i"
           ]
         },
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "Why do you say 'am' ?",
             "I don't understand that."
@@ -244,11 +249,11 @@
     },
     {
       "key" : "are",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "* are you *" ,
+          "memorise" : false,
+					"decomposition" : "* are you *" ,
           "reconstruction" : [
             "Why are you interested in whether I am (2) or not ?",
             "Would you prefer if I weren't (2) ?",
@@ -260,13 +265,15 @@
           ]
         },
         {
-          "decomposition" : "* you are *" ,
+          "memorise" : false,
+					"decomposition" : "* you are *" ,
           "reconstruction" : [
             "GOTO you"
           ]
         },
         {
-          "decomposition" : "* are *" ,
+          "memorise" : false,
+					"decomposition" : "* are *" ,
           "reconstruction" : [
             "Did you think they might not be (2) ?",
             "Would you like it if they were not (2) ?",
@@ -280,11 +287,11 @@
     },
     {
       "key" : "your",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "* your *" ,
+          "memorise" : false,
+					"decomposition" : "* your *" ,
           "reconstruction" : [
             "Why are you concerned over my (2) ?",
             "What about your own (2) ?",
@@ -298,11 +305,11 @@
     },
     {
       "key" : "was",
-      "memorise" : false,
 			"rank" : 2,
       "rules" : [
         {
-          "decomposition" : "* was i *" ,
+          "memorise" : false,
+					"decomposition" : "* was i *" ,
           "reconstruction" : [
             "What if you were (2) ?",
             "Do you think you were (2) ?",
@@ -313,7 +320,8 @@
           ]
         },
         {
-          "decomposition" : "* i was *" ,
+          "memorise" : false,
+					"decomposition" : "* i was *" ,
           "reconstruction" : [
             "Were you really ?",
             "Why do you tell me you were (2) now ?",
@@ -321,7 +329,8 @@
           ]
         },
         {
-          "decomposition" : "* was you *" ,
+          "memorise" : false,
+					"decomposition" : "* was you *" ,
           "reconstruction" : [
             "Would you like to believe I was (2) ?",
             "What suggests that I was (2) ?",
@@ -334,11 +343,11 @@
     },
     {
       "key" : "i",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "* i @desire *" ,
+          "memorise" : false,
+					"decomposition" : "* i @desire *" ,
           "reconstruction" : [
             "What would it mean to you if you got (3) ?",
             "Why do you want (3) ?",
@@ -349,7 +358,8 @@
           ]
         },
         {
-          "decomposition" : "* i am* @sad *" ,
+          "memorise" : false,
+					"decomposition" : "* i am* @sad *" ,
           "reconstruction" : [
             "I am sorry to hear that you are (3).",
             "Do you think coming here will help you not to be (3) ?",
@@ -358,7 +368,8 @@
           ]
         },
         {
-          "decomposition" : "* i am* @happy *" ,
+          "memorise" : false,
+					"decomposition" : "* i am* @happy *" ,
           "reconstruction" : [
             "How have I helped you to be (3) ?",
             "Has your treatment made you (3) ?",
@@ -367,13 +378,15 @@
           ]
         },
         {
-          "decomposition" : "* i was *" ,
+          "memorise" : false,
+					"decomposition" : "* i was *" ,
           "reconstruction" : [
             "GOTO was"
           ]
         },
         {
-          "decomposition" : "* i @belief i *" ,
+          "memorise" : false,
+					"decomposition" : "* i @belief i *" ,
           "reconstruction" : [
             "Do you really think so ?",
             "But you are not sure you (3).",
@@ -381,13 +394,15 @@
           ]
         },
         {
-          "decomposition" : "* i* @belief *you *" ,
+          "memorise" : false,
+					"decomposition" : "* i* @belief *you *" ,
           "reconstruction" : [
               "GOTO you"
           ]
         },
         {
-          "decomposition" : "* i am *" ,
+          "memorise" : false,
+					"decomposition" : "* i am *" ,
           "reconstruction" : [
             "Is it because you are (2) that you came to me ?",
             "How long have you been (2) ?",
@@ -397,7 +412,8 @@
           ]
         },
         {
-          "decomposition" : "* i @cannot *" ,
+          "memorise" : false,
+					"decomposition" : "* i @cannot *" ,
           "reconstruction" : [
             "How do you know that you can't (3) ?",
             "Have you tried ?",
@@ -407,7 +423,8 @@
           ]
         },
         {
-          "decomposition" : "* i don't *" ,
+          "memorise" : false,
+					"decomposition" : "* i don't *" ,
           "reconstruction" : [
             "Don't you really (2) ?",
             "Why don't you (2) ?",
@@ -416,7 +433,8 @@
           ]
         },
         {
-          "decomposition" : "* i feel *" ,
+          "memorise" : false,
+					"decomposition" : "* i feel *" ,
           "reconstruction" : [
             "Tell me more about such feelings.",
             "Do you often feel (2) ?",
@@ -425,7 +443,8 @@
           ]
         },
         {
-          "decomposition" : "* i * you *"  ,
+          "memorise" : false,
+					"decomposition" : "* i * you *"  ,
           "reconstruction" : [
             "Perhaps in your fantasies we (2) each other.",
             "Do you wish to (2) me ?",
@@ -434,7 +453,8 @@
           ]
         },
         {
-          "decomposition" : "*"  ,
+          "memorise" : false,
+					"decomposition" : "*"  ,
           "reconstruction" : [
             "You say (1) ?",
             "Can you elaborate on that ?",
@@ -446,17 +466,18 @@
     },
     {
       "key" : "you",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "* you remind me of *" ,
+          "memorise" : false,
+					"decomposition" : "* you remind me of *" ,
           "reconstruction" : [
             "GOTO alike"
           ]
         },
         {
-          "decomposition" : "* you are *" ,
+          "memorise" : false,
+					"decomposition" : "* you are *" ,
           "reconstruction" : [
             "What makes you think I am (2) ?",
             "Does it please you to believe I am (2) ?",
@@ -465,7 +486,8 @@
           ]
         },
         {
-          "decomposition" : "* you *" ,
+          "memorise" : false,
+					"decomposition" : "* you *" ,
           "reconstruction" : [
             "We were discussing you -- not me.",
             "Oh, I (2) ?",
@@ -477,11 +499,11 @@
     },
     {
       "key" : "yes",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "You seem to be quite positive.",
             "You are sure.",
@@ -493,11 +515,11 @@
     },
     {
       "key" : "no",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "* no one *" ,
+          "memorise" : false,
+					"decomposition" : "* no one *" ,
           "reconstruction" : [
             "Are you sure, no one (2) ?",
             "Surely someone (2) .",
@@ -509,7 +531,8 @@
           ]
         },
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "Are you saying no just to be negative?",
             "You are being a bit negative.",
@@ -521,11 +544,11 @@
     },
     {
       "key" : "my",
-      "memorise" : false,
 			"rank" : 2,
       "rules" : [
         {
-          "decomposition" : "$ * my *" ,
+          "memorise" : true,
+					"decomposition" : "* my *" ,
           "reconstruction" : [
             "Does that have anything to do with the fact that your (2) ?",
             "Lets discuss further why your (2).",
@@ -534,7 +557,8 @@
           ]
         },
         {
-          "decomposition" : "* my* @family *" ,
+          "memorise" : false,
+					"decomposition" : "* my* @family *" ,
           "reconstruction" : [
             "Tell me more about your family.",
             "Who else in your family (4) ?",
@@ -543,7 +567,8 @@
           ]
         },
         {
-          "decomposition" : "* my *" ,
+          "memorise" : false,
+					"decomposition" : "* my *" ,
           "reconstruction" : [
             "Your (2) ?",
             "Why do you say your (2) ?",
@@ -555,11 +580,11 @@
     },
     {
       "key" : "can",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "* can you *" ,
+          "memorise" : false,
+					"decomposition" : "* can you *" ,
           "reconstruction" : [
             "You believe I can (2) don't you ?",
             "GOTO what",
@@ -568,7 +593,8 @@
           ]
         },
         {
-          "decomposition" : "* can i *" ,
+          "memorise" : false,
+					"decomposition" : "* can i *" ,
           "reconstruction" : [
             "Whether or not you can (2) depends on you more than on me.",
             "Do you want to be able to (2) ?",
@@ -580,11 +606,11 @@
     },
     {
       "key" : "what",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "Why do you ask ?",
             "Does that question interest you ?",
@@ -601,11 +627,11 @@
     },
     {
       "key" : "who",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "GOTO what"
           ]
@@ -614,11 +640,11 @@
     },
     {
       "key" : "when",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "GOTO what"
           ]
@@ -627,11 +653,11 @@
     },
     {
       "key" : "where",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "GOTO what"
           ]
@@ -640,11 +666,11 @@
     },
     {
       "key" : "how",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "GOTO what"
           ]
@@ -653,11 +679,11 @@
     },
     {
       "key" : "because",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "Is that the real reason ?",
             "Don't any other reasons come to mind ?",
@@ -669,11 +695,11 @@
     },
     {
       "key" : "why",
-      "memorise" : false,
 			"rank" : 0,
       "rules" : [
         {
-          "decomposition" : "* why don't you *",
+          "memorise" : false,
+					"decomposition" : "* why don't you *",
           "reconstruction" : [
             "Do you believe I don't (2) ?",
             "Perhaps I will (2) in good time.",
@@ -683,7 +709,8 @@
           ]
         },
         {
-          "decomposition" : "* why can't i *",
+          "memorise" : false,
+					"decomposition" : "* why can't i *",
           "reconstruction" : [
             "Do you think you should be able to (2) ?",
             "Do you want to be able to (2) ?",
@@ -693,7 +720,8 @@
           ]
         },
         {
-          "decomposition" : "*",
+          "memorise" : false,
+					"decomposition" : "*",
           "reconstruction" : [
             "GOTO what"
           ]
@@ -702,11 +730,11 @@
     },
     {
       "key" : "everyone",
-      "memorise" : false,
 			"rank" : 2,
       "rules" : [
         {
-          "decomposition" : "* @everyone *",
+          "memorise" : false,
+					"decomposition" : "* @everyone *",
           "reconstruction" : [
             "Really, (2) ?",
             "Surely not (2).",
@@ -723,11 +751,11 @@
     },
     {
       "key" : "everybody",
-      "memorise" : false,
 			"rank" : 2,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "GOTO everyone"
           ]
@@ -736,11 +764,11 @@
     },
     {
       "key" : "nobody",
-      "memorise" : false,
 			"rank" : 2,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "GOTO everyone"
           ]
@@ -749,11 +777,11 @@
     },
     {
       "key" : "noone",
-      "memorise" : false,
 			"rank" : 2,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "GOTO everyone"
           ]
@@ -762,11 +790,11 @@
     },
     {
       "key" : "always",
-      "memorise" : false,
 			"rank" : 1,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "Can you think of a specific example ?",
             "When ?",
@@ -778,11 +806,11 @@
     },
     {
       "key" : "alike",
-      "memorise" : false,
 			"rank" : 10,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "In what way ?",
             "What resemblence do you see ?",
@@ -798,11 +826,11 @@
     },
     {
       "key" : "alike",
-      "memorise" : false,
 			"rank" : 10,
       "rules" : [
         {
-          "decomposition" : "* @be *like *" ,
+          "memorise" : false,
+					"decomposition" : "* @be *like *" ,
           "reconstruction" : [
             "GOTO alike"
           ]
@@ -811,11 +839,11 @@
     },
     {
       "key" : "different",
-      "memorise" : false,
       "rank" : 0,
       "rules" : [
         {
-          "decomposition" : "*" ,
+          "memorise" : false,
+					"decomposition" : "*" ,
           "reconstruction" : [
             "How is it different ?",
             "What differences do you see ?",

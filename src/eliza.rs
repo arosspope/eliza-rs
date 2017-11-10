@@ -1,4 +1,5 @@
 use std::error::Error;
+use std::collections::VecDeque;
 
 use script_loader::ScriptLoader;
 use reflections::Reflections;
@@ -23,7 +24,7 @@ pub struct Eliza {
     transforms : Transforms,        //TODO: Things to transform in post processing?
     synonyms : Synonyms,            //TODO: Common synonyms
     reflections : Reflections,      //TODO: Applied before checking composition rules?
-    memory : Vec<String>,           //TODO: A collection of things the user has said in previous conversation
+    memory : VecDeque<String>,           //TODO: A collection of things the user has said in previous conversation
 }
 
 impl Eliza {
@@ -58,7 +59,7 @@ impl Eliza {
                 println!("  Loading reflections...");
                 Reflections::load(script_location)?
             },
-            memory: Vec::new(),
+            memory: VecDeque::new(),
         };
 
         Ok(e)
@@ -78,10 +79,9 @@ impl Eliza {
         }
     }
 
-    pub fn respond(&self, input: &str) -> String {
+    pub fn respond(&mut self, input: &str) -> String {
         //Convert the input to lowercase and replace certain words before splitting up the input
         //into phrases and their word parts
-        let mut response = String::new();
         let phrases = get_phrases(&self.transform_input(&input.to_lowercase()));
 
         let (active_phrase, keystack) = self.populate_keystack(phrases);
@@ -89,15 +89,17 @@ impl Eliza {
 
         if let Some(phrase) = active_phrase {
             //let phrase_to_decompose = phrase_words[pos];
-            response = String::from("we got a match");
-        } else if false {
-            response = String::from("no match");
+            String::from("we got a match")
         } else {
-            //Nothing else to try, use fallback trick
-            response = self.fallback();
+            //Attempt to use something in memory, otherwise use fallback trick
+            if let Some(top) = self.memory.pop_front(){
+                top
+            } else {
+                self.fallback()
+            }
         }
 
-        response
+        //response
     }
 
     fn fallback(&self) -> String {
