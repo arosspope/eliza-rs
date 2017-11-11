@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate serde_derive;
+extern crate regex;
 
 use std::io;
 use std::io::Write;

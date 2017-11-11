@@ -1,5 +1,6 @@
 use std::error::Error;
 use std::collections::VecDeque;
+use regex::Regex;
 
 use script_loader::ScriptLoader;
 use reflections::Reflections;
@@ -79,35 +80,52 @@ impl Eliza {
         }
     }
 
-    pub fn respond(&mut self, input: &str) -> String {
-        //Convert the input to lowercase and replace certain words before splitting up the input
-        //into phrases and their word parts
-        let phrases = get_phrases(&self.transform_input(&input.to_lowercase()));
-
-        let (active_phrase, keystack) = self.populate_keystack(phrases);
-        //TODO: will need to only create the PhraseWord struct once we have done this.
-
-        if let Some(phrase) = active_phrase {
-            //let phrase_to_decompose = phrase_words[pos];
-            String::from("we got a match")
-        } else {
-            //Attempt to use something in memory, otherwise use fallback trick
-            if let Some(top) = self.memory.pop_front(){
-                top
-            } else {
-                self.fallback()
-            }
-        }
-
-        //response
-    }
-
     fn fallback(&self) -> String {
         match self.fallbacks.random(){
             Some(fallback) => fallback.to_string(),
             None => String::from("Go on."), //A fallback for the fallback - har har
         }
     }
+
+    pub fn respond(&mut self, input: &str) -> String {
+        //Convert the input to lowercase and replace certain words before splitting up the input
+        //into phrases and their word parts
+        let phrases = get_phrases(&self.transform_input(&input.to_lowercase()));
+
+        let (active_phrase, keystack) = self.populate_keystack(phrases);
+
+        let mut response: Option<String> = None;
+
+        if let Some(phrase) = active_phrase {
+            response = self.find_response(&phrase, keystack);
+        }
+
+        if let Some(res) = response {
+            res
+        } else if let Some(mem) = self.memory.pop_front(){
+            //Attempt to use something in memory, otherwise use fallback trick
+            mem
+        } else {
+            self.fallback()
+        }
+    }
+
+    fn find_response(&self, phrase: &str, keystack: Vec<Keyword>) -> Option<String> {
+        //for each decompostion rule attempt to match
+            //We found a match
+            //For each recomoposition rule
+                //If not in hashmap, add and set number to 1
+                //Otherwise loop through each rule and find the smallest one
+                //when found, increment its use count and add to self
+            //Parse rule and replace '(2)' with the matching group
+
+
+        //TODO: Swap synonyms when '@' symbol is encountered
+        //TODO: Store to memory when 'memorise' is true
+
+        Some(String::from("blah, blah, blah"))
+    }
+
 
     fn transform_input(&self, input: &str) -> String {
         let mut transformed = String::from(input);
@@ -161,9 +179,27 @@ fn get_words(phrase: &str) -> Vec<String> {
 mod tests {
     use super::*;
 
+    //TODO: Decouple tests from input json files
+
     #[test]
     fn loading_eliza_okay() {
         assert!(Eliza::new("scripts/rogerian_psychiatrist").is_ok());
+    }
+
+    #[test]
+    fn regex_test(){
+        let re = Regex::new(r"(?P<y>\d{4})-(?P<m>\d{2})-(?P<d>\d{2})").unwrap();
+        let before = "2012-03-14, 2013-01-01 and 2014-07-05";
+        let after = re.replace_all(before, "$m/$d/$y");
+        assert_eq!(after, "03/14/2012, 01/01/2013 and 07/05/2014");
+    }
+
+    #[test]
+    fn regex_test2(){
+        let re = Regex::new(r"(?P<1>*) you are (?P<2>*)");
+        let before = "you are so stupid";
+        let after = re.replace_all(before, "What makes you think I am $2 ?");
+        assert_eq!(after, "What makes you think I am so stupid ?");
     }
 
     #[test]

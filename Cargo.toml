@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["arosspope <andrew.pope456@gmail.com>"]
 
 [dependencies]
+regex = "0.2"
 rand = "0.3"
 serde = "1.0"
 serde_json = "1.0"
