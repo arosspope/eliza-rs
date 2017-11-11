@@ -196,10 +196,31 @@ mod tests {
 
     #[test]
     fn regex_test2(){
-        let re = Regex::new(r"(?P<1>*) you are (?P<2>*)");
+        let re = Regex::new(r"(.*) you are (.*)").unwrap();
         let before = "you are so stupid";
-        let after = re.replace_all(before, "What makes you think I am $2 ?");
-        assert_eq!(after, "What makes you think I am so stupid ?");
+        let cap = re.captures("I think that you are so stupid").unwrap();
+
+        assert_eq!("I think that", &cap[1]);
+        assert_eq!("so stupid", &cap[2]);
+
+        let words = get_words("I think that you are $2");
+        let mut response = String::new();
+
+        for w in words {
+            if w.contains("$"){
+                let num = w.replace("$", "").parse::<usize>();
+                if num.is_ok(){
+                    response.push_str(&cap[num.unwrap()]);
+                }
+            } else {
+                response.push_str(&w);
+                response.push_str(" ");
+            }
+        }
+
+        println!("{}", response);
+
+        assert_eq!(before, "What makes you think I am so stupid ?");
     }
 
     #[test]
