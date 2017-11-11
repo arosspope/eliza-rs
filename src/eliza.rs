@@ -1,6 +1,6 @@
 use std::error::Error;
 use std::collections::VecDeque;
-use regex::Regex;
+use regex::{Regex, Captures};
 
 use script_loader::ScriptLoader;
 use reflections::Reflections;
@@ -110,7 +110,60 @@ impl Eliza {
         }
     }
 
+    fn reconstruct(&self, rule: &str, captures: Captures) -> Option<String> {
+        let mut response: Option<String> = None;
+        let mut temp = String::from(rule);
+        let mut ok = true;
+
+        //For each word, see if we need to swap anything out for a capture
+        let words = get_words(rule);
+        for w in &words {
+            if w.contains("$"){
+                //Format example 'What makes you think I am $2 ?' which uses the second capture
+                //group of the regex
+                if let Ok(n) = w.replace("$", "").parse::<usize>() {
+                    if n < captures.len() + 1 { //indexing starts at 1
+                        temp = temp.replace(w, &captures[n]);
+                    } else {
+                        ok = false;
+                        println!("Outside of capture range"); //TODO: Print debug
+                        break;
+                    }
+                } else {
+                    ok = false;
+                    println!("Not a valid capture group"); //Debug
+                    break;
+                }
+            }
+        }
+
+        if ok {
+            Some(temp)
+        } else {
+            None
+        }
+    }
+
     fn find_response(&self, phrase: &str, keystack: Vec<Keyword>) -> Option<String> {
+        let mut response = None;
+
+        for k in keystack {
+            for rule in k.rules {
+                //TODO: Static lazy loading??
+                if let Ok(re) = Regex::new(&rule.decomposition) {
+                    if let Some(cap) = re.captures(phrase) {
+                        for recon in rule.reconstruction {
+                            //TODO: find best reconstructing rule, remove self
+                            self.reconstruct(rule, cap);
+                        }
+
+                    } //Else nothing was captured.
+                } else {
+                    println!("Bad rule")
+                }
+            }
+        }
+
         //for each decompostion rule attempt to match
             //We found a match
             //For each recomoposition rule
@@ -123,7 +176,7 @@ impl Eliza {
         //TODO: Swap synonyms when '@' symbol is encountered
         //TODO: Store to memory when 'memorise' is true
 
-        Some(String::from("blah, blah, blah"))
+        response
     }
 
 
@@ -197,30 +250,32 @@ mod tests {
     #[test]
     fn regex_test2(){
         let re = Regex::new(r"(.*) you are (.*)").unwrap();
-        let before = "you are so stupid";
-        let cap = re.captures("I think that you are so stupid").unwrap();
+        let phrase = "I think that you are so stupid";
+        let cap = re.captures(phrase).unwrap();
 
         assert_eq!("I think that", &cap[1]);
         assert_eq!("so stupid", &cap[2]);
 
-        let words = get_words("I think that you are $2");
-        let mut response = String::new();
+        let mut response = String::from("What makes you think I am $5 ?");
+        let words = get_words(&response);
 
-        for w in words {
+        for w in &words {
             if w.contains("$"){
                 let num = w.replace("$", "").parse::<usize>();
-                if num.is_ok(){
-                    response.push_str(&cap[num.unwrap()]);
+
+                if let Ok(n) = num {
+                    if n < cap.len() + 1 { //indexing starts at 1
+                        response = response.replace(w, &cap[n]);
+                    } else {
+                        println!("Outside of capture range");
+                    }
+                } else {
+                    println!("Not a valid capture group"); //Debug
                 }
-            } else {
-                response.push_str(&w);
-                response.push_str(" ");
             }
         }
 
-        println!("{}", response);
-
-        assert_eq!(before, "What makes you think I am so stupid ?");
+        assert_eq!(response, "What makes you think I am so stupid?");
     }
 
     #[test]
