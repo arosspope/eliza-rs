@@ -1,15 +1,15 @@
 use script_loader::ScriptLoader;
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Reflection {
-    word: String,
-    inverse: String,
-    twoway: bool,
+pub struct Reflection {
+    pub word: String,
+    pub inverse: String,
+    pub twoway: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Reflections {
-    reflections: Vec<Reflection>,
+    pub reflections: Vec<Reflection>,
 }
 
 impl ScriptLoader for Reflections {

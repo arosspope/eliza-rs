@@ -13,7 +13,7 @@
     {
       "word" : "me",
       "inverse" : "you",
-      "twoway" : false
+      "twoway" : true
     },
     {
       "word" : "myself",

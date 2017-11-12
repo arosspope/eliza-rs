@@ -3,7 +3,7 @@ use std::collections::{VecDeque, HashMap};
 use regex::{Regex, Captures};
 
 use script_loader::ScriptLoader;
-use reflections::Reflections;
+use reflections::{Reflections, Reflection};
 use keywords::{Keywords, Keyword};
 use greetings::Greetings;
 use farewells::Farewells;
@@ -118,13 +118,27 @@ impl Eliza {
         for k in keystack {
             for rule in k.rules {
                 //TODO: Static lazy loading??
+
+                //TODO: get a permutation of the regex with @sybmbols
+
                 if let Ok(re) = Regex::new(&rule.decomposition) {
                     if let Some(cap) = re.captures(phrase) {
                         //A match was found: find the best reconstruction rule
-                        if let Some(recon) = self.best_recon_rule(rule.reconstruction) {
-                            response = reconstruct(&recon, &cap);
-                            //TODO: if memory -> put into memory stack and DONT break
-                            break;
+                        if let Some(recon) = self.get_recon_rule(rule.reconstruction) {
+                            //TODO: if best rule contained 'GOTO' do that...
+                            println!("{:?}", cap);
+                            response = reconstruct(&recon, &cap, &self.reflections.reflections);
+
+                            if response.is_some(){
+                                if rule.memorise {
+                                    //We'll save this response for later...
+                                    self.memory.push_back(response.unwrap());
+                                    response = None;
+                                } else {
+                                    //We found a response, exit
+                                    break;
+                                }
+                            }
                         }
                     }
                 } else {
@@ -148,7 +162,7 @@ impl Eliza {
         response
     }
 
-    fn best_recon_rule(&mut self, rules: Vec<String>) -> Option<String> {
+    fn get_recon_rule(&mut self, rules: Vec<String>) -> Option<String> {
         let mut best_rule: Option<String> = None;
         let mut count: Option<usize> = None;
 
@@ -172,9 +186,16 @@ impl Eliza {
                 false => {
                     //The rule has never been used before - this has precedence
                     best_rule = Some(rule.clone());
-                    self.rule_usage.insert(rule, 1);
+                    self.rule_usage.insert(rule, 0);
                     break;
                 }
+            }
+        }
+
+        //For whatever rule we use (if any), increment its usage count
+        if best_rule.is_some(){
+            if let Some(usage) = self.rule_usage.get_mut(&best_rule.clone().unwrap()){
+                *usage = *usage + 1;
             }
         }
 
@@ -221,7 +242,8 @@ impl Eliza {
     }
 }
 
-fn reconstruct(rule: &str, captures: &Captures) -> Option<String> {
+fn reconstruct(rule: &str, captures: &Captures, reflections: &Vec<Reflection>) -> Option<String>
+{
     //TODO: Better way using regex replace all?
     //TODO: Must include note about being whitespace before '?'
     let mut temp = String::from(rule);
@@ -235,7 +257,8 @@ fn reconstruct(rule: &str, captures: &Captures) -> Option<String> {
             //uses the second capture group of the regex
             if let Ok(n) = w.replace("$", "").parse::<usize>() {
                 if n < captures.len() + 1 { //indexing starts at 1
-                    temp = temp.replace(w, &captures[n]);
+                    //Perform reflection on the capture before subsitution
+                    temp = temp.replace(w, &reflect(&captures[n], reflections));
                 } else {
                     ok = false;
                     eprintln!("[ERR] {} is outside capture range in: '{}'", n, rule);
@@ -256,6 +279,35 @@ fn reconstruct(rule: &str, captures: &Captures) -> Option<String> {
     } else {
         None
     }
+}
+
+fn reflect(input: &str, reflections: &Vec<Reflection>) -> String {
+    //we don't want to accidently re-reflect word pairs that have two-way reflection
+    let mut reflected_phrase = String::new();
+    let words = get_words(input);
+
+    for w in words {
+        //Find reflection pairs that are applicable to this word
+        if let Some(reflect) = reflections.iter().find(|ref r| {
+            r.word == w || return if r.twoway {r.inverse == w} else {false}
+        }) {
+            if reflect.word == w {
+                reflected_phrase.push_str(&reflect.inverse);
+            } else if reflect.twoway && reflect.inverse == w {
+                reflected_phrase.push_str(&reflect.word);
+            } else {
+                //Unlikely to happen, but print message just incase
+                eprintln!("[ERR] Invalid reflection for pair {:?} in: {}", reflect, input);
+            }
+        } else {
+            //No reflection required
+            reflected_phrase.push_str(&w);
+        }
+
+        reflected_phrase.push_str(" "); //put a space after each word
+    }
+
+    reflected_phrase.trim().to_string()
 }
 
 fn get_phrases(input: &str) -> Vec<String> {
@@ -292,7 +344,7 @@ mod tests {
     }
 
     #[test]
-    fn best_rule_equal(){
+    fn recon_rule_equal(){
         let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
 
         //Create a fake rule usage HashMap
@@ -304,11 +356,12 @@ mod tests {
 
         //All equal precedence, should just return the first
         e.rule_usage = usages;
-        assert_eq!("first", e.best_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("first", e.get_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!(2, e.rule_usage["first"]);
     }
 
     #[test]
-    fn best_rule_smaller(){
+    fn recon_rule_smaller(){
         let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
 
         //Create a fake rule usage HashMap
@@ -320,11 +373,12 @@ mod tests {
 
         //One has been used less than the rest
         e.rule_usage = usages;
-        assert_eq!("third", e.best_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("third", e.get_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!(3, e.rule_usage["third"]);
     }
 
     #[test]
-    fn best_rule_none(){
+    fn recon_rule_unknown(){
         let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
 
         //Create a fake rule usage HashMap
@@ -335,26 +389,44 @@ mod tests {
 
         //One has never been used
         e.rule_usage = usages;
-        assert_eq!("fourth", e.best_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("fourth", e.get_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(1, e.rule_usage["fourth"]);
     }
 
     #[test]
-    fn reconstruction(){
+    fn recon_ok(){
+        let reflections: Vec<Reflection> = Vec::new();
         let re = Regex::new(r"(.*) you are (.*)").unwrap();
         let phrase = "I think that you are so stupid";
         let cap = re.captures(phrase).unwrap();
 
-        let res = reconstruct("What makes you think I am $2 ?", &cap);
+        let res = reconstruct("What makes you think I am $2 ?", &cap, &reflections);
         assert_eq!(res.unwrap(), "What makes you think I am so stupid ?");
+    }
 
-        let res = reconstruct("What makes you think I am $5 ?", &cap);
-        assert!(res.is_none());
+    #[test]
+    fn recon_invalid_index(){
+        let reflections: Vec<Reflection> = Vec::new();
+        let re = Regex::new(r"(.*) you are (.*)").unwrap();
+        let phrase = "I think that you are so stupid";
+        let cap = re.captures(phrase).unwrap();
 
-        let res = reconstruct("What makes you think I am $a ?", &cap);
+        let res = reconstruct("What makes you think I am $5 ?", &cap, &reflections);
         assert!(res.is_none());
     }
 
+    #[test]
+    fn recon_invalid_id(){
+        let reflections: Vec<Reflection> = Vec::new();
+        let re = Regex::new(r"(.*) you are (.*)").unwrap();
+        let phrase = "I think that you are so stupid";
+        let cap = re.captures(phrase).unwrap();
+
+        let res = reconstruct("What makes you think I am $a ?", &cap, &reflections);
+        assert!(res.is_none());
+    }
+
+    //TODO: Move transform outside of ELIZA for testing
     #[test]
     fn transform(){
         let e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
@@ -387,6 +459,7 @@ mod tests {
         assert_eq!(vec!("Hello", "how", "are", "you"), words);
     }
 
+    //TODO: Move keystack outside of scope of eliza for testing
     #[test]
     fn keystack_building(){
         let e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();

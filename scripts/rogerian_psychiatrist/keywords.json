@@ -359,7 +359,7 @@
         },
         {
           "memorise" : false,
-					"decomposition" : "(.*) i am(.*) @sad (.*)" ,
+					"decomposition" : "(.*) i am (.*) @sad (.*)" ,
           "reconstruction" : [
             "I am sorry to hear that you are $3.",
             "Do you think coming here will help you not to be $3 ?",
@@ -369,7 +369,7 @@
         },
         {
           "memorise" : false,
-					"decomposition" : "(.*) i am(.*) @happy (.*)" ,
+					"decomposition" : "(.*) i am (.*) @happy (.*)" ,
           "reconstruction" : [
             "How have I helped you to be $3 ?",
             "Has your treatment made you $3 ?",
@@ -395,7 +395,7 @@
         },
         {
           "memorise" : false,
-					"decomposition" : "(.*) i(.*) @belief (.*)you (.*)" ,
+					"decomposition" : "(.*) i (.*) @belief (.*) you (.*)" ,
           "reconstruction" : [
               "GOTO you"
           ]
@@ -548,17 +548,17 @@
       "rules" : [
         {
           "memorise" : true,
-					"decomposition" : "(.*) my (.*)" ,
+					"decomposition" : "(.*)my(.*)" ,
           "reconstruction" : [
             "Does that have anything to do with the fact that your $2 ?",
-            "Lets discuss further why your $2.",
-            "Earlier you said your $2.",
-            "But your $2."
+            "Lets discuss further why your $2 .",
+            "Earlier you said your $2 .",
+            "But your $2 ."
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "(.*) my(.*) @family (.*)" ,
+					"decomposition" : "(.*)my(.*)@family(.*)" ,
           "reconstruction" : [
             "Tell me more about your family.",
             "Who else in your family $4 ?",
@@ -568,7 +568,7 @@
         },
         {
           "memorise" : false,
-					"decomposition" : "(.*) my (.*)" ,
+					"decomposition" : "(.*)my(.*)" ,
           "reconstruction" : [
             "Your $2 ?",
             "Why do you say your $2 ?",
@@ -830,7 +830,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "(.*) @be (.*)like (.*)" ,
+					"decomposition" : "(.*) @be (.*) like (.*)" ,
           "reconstruction" : [
             "GOTO alike"
           ]
