@@ -8,7 +8,7 @@ use keywords::{Keywords, Keyword};
 use greetings::Greetings;
 use farewells::Farewells;
 use fallbacks::Fallbacks;
-use synonyms::Synonyms;
+use synonyms::{Synonyms, Synonym};
 use transforms::Transforms;
 
 #[derive(Debug, Clone)]
@@ -115,18 +115,20 @@ impl Eliza {
     fn find_response(&mut self, phrase: &str, keystack: Vec<Keyword>) -> Option<String> {
         let mut response = None;
 
-        for k in keystack {
+        'outer: for k in keystack {
             for rule in k.rules {
                 //TODO: Static lazy loading??
 
                 //TODO: get a permutation of the regex with @sybmbols
+                //Get permutations of the decomposition rule (rules with the '@' symbol)
+                let re_perms = rule_permutations(&rule.decomposition, &self.synonyms.synonyms);
 
-                if let Ok(re) = Regex::new(&rule.decomposition) {
+                for re in re_perms {
                     if let Some(cap) = re.captures(phrase) {
                         //A match was found: find the best reconstruction rule
-                        if let Some(recon) = self.get_recon_rule(rule.reconstruction) {
+                        if let Some(recon) = self.get_recon_rule(&rule.reconstruction) {
                             //TODO: if best rule contained 'GOTO' do that...
-                            println!("{:?}", cap);
+                            
                             response = reconstruct(&recon, &cap, &self.reflections.reflections);
 
                             if response.is_some(){
@@ -136,13 +138,11 @@ impl Eliza {
                                     response = None;
                                 } else {
                                     //We found a response, exit
-                                    break;
+                                    break 'outer;
                                 }
                             }
                         }
                     }
-                } else {
-                    eprintln!("[ERR] Invalid decompostion rule: '{}'", rule.decomposition);
                 }
             }
         }
@@ -162,15 +162,15 @@ impl Eliza {
         response
     }
 
-    fn get_recon_rule(&mut self, rules: Vec<String>) -> Option<String> {
+    fn get_recon_rule(&mut self, rules: &[String]) -> Option<String> {
         let mut best_rule: Option<String> = None;
         let mut count: Option<usize> = None;
 
         for rule in rules {
-            match self.rule_usage.contains_key(&rule) {
+            match self.rule_usage.contains_key(rule) {
                 true => {
                     //If it has already been used, get its usage count
-                    let usage = self.rule_usage[&rule];
+                    let usage = self.rule_usage[rule];
                     if let Some(c) = count {
                         if usage < c {
                             //The usage is less than the running total
@@ -186,7 +186,7 @@ impl Eliza {
                 false => {
                     //The rule has never been used before - this has precedence
                     best_rule = Some(rule.clone());
-                    self.rule_usage.insert(rule, 0);
+                    self.rule_usage.insert(rule.to_string(), 0);
                     break;
                 }
             }
@@ -242,7 +242,19 @@ impl Eliza {
     }
 }
 
-fn reconstruct(rule: &str, captures: &Captures, reflections: &Vec<Reflection>) -> Option<String>
+fn rule_permutations(rule: &str, synonyms: &[Synonym]) -> Vec<Regex> {
+    let mut permutations: Vec<Regex> = Vec::new();
+
+    if let Ok(re) = Regex::new(rule) {
+        permutations.push(re)
+    } else {
+        eprintln!("[ERR] Invalid decompostion rule: '{}'", rule);
+    }
+
+    permutations
+}
+
+fn reconstruct(rule: &str, captures: &Captures, reflections: &[Reflection]) -> Option<String>
 {
     //TODO: Better way using regex replace all?
     //TODO: Must include note about being whitespace before '?'
@@ -281,7 +293,7 @@ fn reconstruct(rule: &str, captures: &Captures, reflections: &Vec<Reflection>) -
     }
 }
 
-fn reflect(input: &str, reflections: &Vec<Reflection>) -> String {
+fn reflect(input: &str, reflections: &[Reflection]) -> String {
     //we don't want to accidently re-reflect word pairs that have two-way reflection
     let mut reflected_phrase = String::new();
     let words = get_words(input);
@@ -356,7 +368,7 @@ mod tests {
 
         //All equal precedence, should just return the first
         e.rule_usage = usages;
-        assert_eq!("first", e.get_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("first", e.get_recon_rule(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(2, e.rule_usage["first"]);
     }
 
@@ -373,7 +385,7 @@ mod tests {
 
         //One has been used less than the rest
         e.rule_usage = usages;
-        assert_eq!("third", e.get_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("third", e.get_recon_rule(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(3, e.rule_usage["third"]);
     }
 
@@ -389,7 +401,7 @@ mod tests {
 
         //One has never been used
         e.rule_usage = usages;
-        assert_eq!("fourth", e.get_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("fourth", e.get_recon_rule(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(1, e.rule_usage["fourth"]);
     }
 
