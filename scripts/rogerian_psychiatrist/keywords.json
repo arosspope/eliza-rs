@@ -6,7 +6,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*",
+					"decomposition" : "(.*)",
           "reconstruction" : [
             "Please don't apologise.",
             "Apologies are not necessary.",
@@ -22,7 +22,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*",
+					"decomposition" : "(.*)",
           "reconstruction" : [
             "GOTO sorry"
           ]
@@ -35,34 +35,34 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* i remember *",
+					"decomposition" : "(.*) i remember (.*)",
           "reconstruction" : [
-            "Do you often think of (2) ?",
-            "Does thinking of (2) bring anything else to mind ?",
+            "Do you often think of $2 ?",
+            "Does thinking of $2 bring anything else to mind ?",
             "What else do you recollect ?",
-            "Why do you remember (2) just now ?",
-            "What in the present situation reminds you of (2) ?",
-            "What is the connection between me and (2) ?",
-            "What else does (2) remind you of ?"
+            "Why do you remember $2 just now ?",
+            "What in the present situation reminds you of $2 ?",
+            "What is the connection between me and $2 ?",
+            "What else does $2 remind you of ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* do you remember *",
+					"decomposition" : "(.*) do you remember (.*)",
           "reconstruction" : [
-            "Did you think I would forget (2) ?",
-            "Why do you think I should recall (2) now ?",
-            "What about (2) ?",
-            "You mentioned (2) ?",
+            "Did you think I would forget $2 ?",
+            "Why do you think I should recall $2 now ?",
+            "What about $2 ?",
+            "You mentioned $2 ?",
             "GOTO what"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* you remember *",
+					"decomposition" : "(.*) you remember (.*)",
           "reconstruction" : [
-            "How could I forget (2) ?",
-            "What about (2) should I remember ?",
+            "How could I forget $2 ?",
+            "What about $2 should I remember ?",
             "GOTO you"
           ]
         }
@@ -74,27 +74,27 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* i forget *",
+					"decomposition" : "(.*) i forget (.*)",
           "reconstruction" : [
-            "Can you think of why you might forget (2) ?",
-            "Why can't you remember (2) ?",
-            "How often do you think of (2) ?",
+            "Can you think of why you might forget $2 ?",
+            "Why can't you remember $2 ?",
+            "How often do you think of $2 ?",
             "Does it bother you to forget that ?",
             "Could it be a mental block ?",
             "Are you generally forgetful ?",
-            "Do you think you are suppressing (2) ?"
+            "Do you think you are suppressing $2 ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* did you forget *",
+					"decomposition" : "(.*) did you forget (.*)",
           "reconstruction" : [
             "Why do you ask ?",
             "Are you sure you told me ?",
-            "Would it bother you if I forgot (2) ?",
-            "Why should I recall (2) just now ?",
+            "Would it bother you if I forgot $2 ?",
+            "Why should I recall $2 just now ?",
             "GOTO what",
-            "Tell me more about (2)."
+            "Tell me more about $2."
           ]
         }
       ]
@@ -105,14 +105,14 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* if *",
+					"decomposition" : "(.*) if (.*)",
           "reconstruction" : [
-            "Do you think it's likely that (2) ?",
-            "Do you wish that (2) ?",
-            "What do you know about (2) ?",
-            "Really, if (2) ?",
-            "What would you do if (2) ?",
-            "But what are the chances that (2) ?",
+            "Do you think it's likely that $2 ?",
+            "Do you wish that $2 ?",
+            "What do you know about $2 ?",
+            "Really, if $2 ?",
+            "What would you do if $2 ?",
+            "But what are the chances that $2 ?",
             "What does this speculation lead to ?"
           ]
         }
@@ -124,11 +124,11 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* i dreamed *",
+					"decomposition" : "(.*) i dreamed (.*)",
           "reconstruction" : [
-            "Really, (2) ?",
-            "Have you ever fantasized (2) while you were awake ?",
-            "Have you ever dreamed (2) before ?",
+            "Really, $2 ?",
+            "Have you ever fantasized $2 while you were awake ?",
+            "Have you ever dreamed $2 before ?",
             "GOTO dream"
           ]
         }
@@ -140,11 +140,11 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*",
+					"decomposition" : "(.*)",
           "reconstruction" : [
-            "Really, (2) ?",
-            "Have you ever fantasized (2) while you were awake ?",
-            "Have you ever dreamed (2) before ?",
+            "Really, $2 ?",
+            "Have you ever fantasized $2 while you were awake ?",
+            "Have you ever dreamed $2 before ?",
             "GOTO dream"
           ]
         }
@@ -156,7 +156,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*",
+					"decomposition" : "(.*)",
           "reconstruction" : [
             "You don't seem quite certain.",
             "Why the uncertain tone ?",
@@ -174,7 +174,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*",
+					"decomposition" : "(.*)",
           "reconstruction" : [
             "I am not interested in names.",
             "I've told you before, I don't care about names -- please continue."
@@ -188,7 +188,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*",
+					"decomposition" : "(.*)",
           "reconstruction" : [
             "How do you do.  Please state your problem.",
             "Hi.  What seems to be your problem ?"
@@ -202,7 +202,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*",
+					"decomposition" : "(.*)",
           "reconstruction" : [
             "Do computers worry you ?",
             "Why do you mention computers ?",
@@ -221,25 +221,25 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* am i *" ,
+					"decomposition" : "(.*) am i (.*)" ,
           "reconstruction" : [
-            "Do you believe you are (2) ?",
-            "Would you want to be (2) ?",
-            "Do you wish I would tell you you are (2) ?",
-            "What would it mean if you were (2) ?",
+            "Do you believe you are $2 ?",
+            "Would you want to be $2 ?",
+            "Do you wish I would tell you you are $2 ?",
+            "What would it mean if you were $2 ?",
             "GOTO what"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i am *" ,
+					"decomposition" : "(.*) i am (.*)" ,
           "reconstruction" : [
             "GOTO i"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "Why do you say 'am' ?",
             "I don't understand that."
@@ -253,34 +253,34 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* are you *" ,
+					"decomposition" : "(.*) are you (.*)" ,
           "reconstruction" : [
-            "Why are you interested in whether I am (2) or not ?",
-            "Would you prefer if I weren't (2) ?",
-            "Perhaps I am (2) in your fantasies.",
-            "Do you sometimes think I am (2) ?",
+            "Why are you interested in whether I am $2 or not ?",
+            "Would you prefer if I weren't $2 ?",
+            "Perhaps I am $2 in your fantasies.",
+            "Do you sometimes think I am $2 ?",
             "GOTO what",
             "Would it matter to you ?",
-            "What if I were (2) ?"
+            "What if I were $2 ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* you are *" ,
+					"decomposition" : "(.*) you are (.*)" ,
           "reconstruction" : [
             "GOTO you"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* are *" ,
+					"decomposition" : "(.*) are (.*)" ,
           "reconstruction" : [
-            "Did you think they might not be (2) ?",
-            "Would you like it if they were not (2) ?",
-            "What if they were not (2) ?",
-            "Are they always (2) ?",
-            "Possibly they are (2).",
-            "Are you positive they are (2) ?"
+            "Did you think they might not be $2 ?",
+            "Would you like it if they were not $2 ?",
+            "What if they were not $2 ?",
+            "Are they always $2 ?",
+            "Possibly they are $2.",
+            "Are you positive they are $2 ?"
           ]
         }
       ]
@@ -291,14 +291,14 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* your *" ,
+					"decomposition" : "(.*) your (.*)" ,
           "reconstruction" : [
-            "Why are you concerned over my (2) ?",
-            "What about your own (2) ?",
-            "Are you worried about someone else's (2) ?",
-            "Really, my (2) ?",
-            "What makes you think of my (2) ?",
-            "Do you want my (2) ?"
+            "Why are you concerned over my $2 ?",
+            "What about your own $2 ?",
+            "Are you worried about someone else's $2 ?",
+            "Really, my $2 ?",
+            "What makes you think of my $2 ?",
+            "Do you want my $2 ?"
           ]
         }
       ]
@@ -309,34 +309,34 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* was i *" ,
+					"decomposition" : "(.*) was i (.*)" ,
           "reconstruction" : [
-            "What if you were (2) ?",
-            "Do you think you were (2) ?",
-            "Were you (2) ?",
-            "What would it mean if you were (2) ?",
-            "What does ' (2) ' suggest to you ?",
+            "What if you were $2 ?",
+            "Do you think you were $2 ?",
+            "Were you $2 ?",
+            "What would it mean if you were $2 ?",
+            "What does ' $2 ' suggest to you ?",
             "GOTO what"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i was *" ,
+					"decomposition" : "(.*) i was (.*)" ,
           "reconstruction" : [
             "Were you really ?",
-            "Why do you tell me you were (2) now ?",
-            "Perhaps I already know you were (2)."
+            "Why do you tell me you were $2 now ?",
+            "Perhaps I already know you were $2."
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* was you *" ,
+					"decomposition" : "(.*) was you (.*)" ,
           "reconstruction" : [
-            "Would you like to believe I was (2) ?",
-            "What suggests that I was (2) ?",
+            "Would you like to believe I was $2 ?",
+            "What suggests that I was $2 ?",
             "What do you think ?",
-            "Perhaps I was (2).",
-            "What if I had been (2) ?"
+            "Perhaps I was $2.",
+            "What if I had been $2 ?"
           ]
         }
       ]
@@ -347,118 +347,118 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* i @desire *" ,
+					"decomposition" : "(.*) i @desire (.*)" ,
           "reconstruction" : [
-            "What would it mean to you if you got (3) ?",
-            "Why do you want (3) ?",
-            "Suppose you got (3) soon.",
-            "What if you never got (3) ?",
-            "What would getting (3) mean to you ?",
-            "What does wanting (3) have to do with this discussion ?"
+            "What would it mean to you if you got $3 ?",
+            "Why do you want $3 ?",
+            "Suppose you got $3 soon.",
+            "What if you never got $3 ?",
+            "What would getting $3 mean to you ?",
+            "What does wanting $3 have to do with this discussion ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i am* @sad *" ,
+					"decomposition" : "(.*) i am(.*) @sad (.*)" ,
           "reconstruction" : [
-            "I am sorry to hear that you are (3).",
-            "Do you think coming here will help you not to be (3) ?",
-            "I'm sure it's not pleasant to be (3).",
-            "Can you explain what made you (3) ?"
+            "I am sorry to hear that you are $3.",
+            "Do you think coming here will help you not to be $3 ?",
+            "I'm sure it's not pleasant to be $3.",
+            "Can you explain what made you $3 ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i am* @happy *" ,
+					"decomposition" : "(.*) i am(.*) @happy (.*)" ,
           "reconstruction" : [
-            "How have I helped you to be (3) ?",
-            "Has your treatment made you (3) ?",
-            "What makes you (3) just now ?",
-            "Can you explain why you are suddenly (3) ?"
+            "How have I helped you to be $3 ?",
+            "Has your treatment made you $3 ?",
+            "What makes you $3 just now ?",
+            "Can you explain why you are suddenly $3 ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i was *" ,
+					"decomposition" : "(.*) i was (.*)" ,
           "reconstruction" : [
             "GOTO was"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i @belief i *" ,
+					"decomposition" : "(.*) i @belief i (.*)" ,
           "reconstruction" : [
             "Do you really think so ?",
-            "But you are not sure you (3).",
-            "Do you really doubt you (3) ?"
+            "But you are not sure you $3.",
+            "Do you really doubt you $3 ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i* @belief *you *" ,
+					"decomposition" : "(.*) i(.*) @belief (.*)you (.*)" ,
           "reconstruction" : [
               "GOTO you"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i am *" ,
+					"decomposition" : "(.*) i am (.*)" ,
           "reconstruction" : [
-            "Is it because you are (2) that you came to me ?",
-            "How long have you been (2) ?",
-            "Do you believe it is normal to be (2) ?",
-            "Do you enjoy being (2) ?",
-            "Do you know anyone else who is (2) ?"
+            "Is it because you are $2 that you came to me ?",
+            "How long have you been $2 ?",
+            "Do you believe it is normal to be $2 ?",
+            "Do you enjoy being $2 ?",
+            "Do you know anyone else who is $2 ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i @cannot *" ,
+					"decomposition" : "(.*) i @cannot (.*)" ,
           "reconstruction" : [
-            "How do you know that you can't (3) ?",
+            "How do you know that you can't $3 ?",
             "Have you tried ?",
-            "Perhaps you could (3) now.",
-            "Do you really want to be able to (3) ?",
-            "What if you could (3) ?"
+            "Perhaps you could $3 now.",
+            "Do you really want to be able to $3 ?",
+            "What if you could $3 ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i don't *" ,
+					"decomposition" : "(.*) i don't (.*)" ,
           "reconstruction" : [
-            "Don't you really (2) ?",
-            "Why don't you (2) ?",
-            "Do you wish to be able to (2) ?",
+            "Don't you really $2 ?",
+            "Why don't you $2 ?",
+            "Do you wish to be able to $2 ?",
             "Does that trouble you ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i feel *" ,
+					"decomposition" : "(.*) i feel (.*)" ,
           "reconstruction" : [
             "Tell me more about such feelings.",
-            "Do you often feel (2) ?",
-            "Do you enjoy feeling (2) ?",
-            "Of what does feeling (2) remind you ?"
+            "Do you often feel $2 ?",
+            "Do you enjoy feeling $2 ?",
+            "Of what does feeling $2 remind you ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* i * you *"  ,
+					"decomposition" : "(.*) i (.*) you (.*)"  ,
           "reconstruction" : [
-            "Perhaps in your fantasies we (2) each other.",
-            "Do you wish to (2) me ?",
-            "You seem to need to (2) me.",
-            "Do you (2) anyone else ?"
+            "Perhaps in your fantasies we $2 each other.",
+            "Do you wish to $2 me ?",
+            "You seem to need to $2 me.",
+            "Do you $2 anyone else ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "*"  ,
+					"decomposition" : "(.*)"  ,
           "reconstruction" : [
-            "You say (1) ?",
+            "You say $1 ?",
             "Can you elaborate on that ?",
-            "Do you say (1) for some special reason ?",
+            "Do you say $1 for some special reason ?",
             "That's quite interesting."
           ]
         }
@@ -470,27 +470,27 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* you remind me of *" ,
+					"decomposition" : "(.*) you remind me of (.*)" ,
           "reconstruction" : [
             "GOTO alike"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* you are *" ,
+					"decomposition" : "(.*) you are (.*)" ,
           "reconstruction" : [
-            "What makes you think I am (2) ?",
-            "Does it please you to believe I am (2) ?",
-            "Do you sometimes wish you were (2) ?",
-            "Perhaps you would like to be (2)."
+            "What makes you think I am $2 ?",
+            "Does it please you to believe I am $2 ?",
+            "Do you sometimes wish you were $2 ?",
+            "Perhaps you would like to be $2."
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* you *" ,
+					"decomposition" : "(.*) you (.*)" ,
           "reconstruction" : [
             "We were discussing you -- not me.",
-            "Oh, I (2) ?",
+            "Oh, I $2 ?",
             "You're not really talking about me -- are you ?",
             "What are your feelings now ?"
           ]
@@ -503,7 +503,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "You seem to be quite positive.",
             "You are sure.",
@@ -519,10 +519,10 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* no one *" ,
+					"decomposition" : "(.*) no one (.*)" ,
           "reconstruction" : [
-            "Are you sure, no one (2) ?",
-            "Surely someone (2) .",
+            "Are you sure, no one $2 ?",
+            "Surely someone $2 .",
             "Can you think of anyone at all ?",
             "Are you thinking of a very special person ?",
             "Who, may I ask ?",
@@ -532,7 +532,7 @@
         },
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "Are you saying no just to be negative?",
             "You are being a bit negative.",
@@ -548,32 +548,32 @@
       "rules" : [
         {
           "memorise" : true,
-					"decomposition" : "* my *" ,
+					"decomposition" : "(.*) my (.*)" ,
           "reconstruction" : [
-            "Does that have anything to do with the fact that your (2) ?",
-            "Lets discuss further why your (2).",
-            "Earlier you said your (2).",
-            "But your (2)."
+            "Does that have anything to do with the fact that your $2 ?",
+            "Lets discuss further why your $2.",
+            "Earlier you said your $2.",
+            "But your $2."
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* my* @family *" ,
+					"decomposition" : "(.*) my(.*) @family (.*)" ,
           "reconstruction" : [
             "Tell me more about your family.",
-            "Who else in your family (4) ?",
-            "Your (3) ?",
-            "What else comes to your mind when you think of your (3) ?"
+            "Who else in your family $4 ?",
+            "Your $3 ?",
+            "What else comes to your mind when you think of your $3 ?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* my *" ,
+					"decomposition" : "(.*) my (.*)" ,
           "reconstruction" : [
-            "Your (2) ?",
-            "Why do you say your (2) ?",
+            "Your $2 ?",
+            "Why do you say your $2 ?",
             "Does that suggest anything else which belongs to you ?",
-            "Is it important to you that your (2) ?"
+            "Is it important to you that your $2 ?"
           ]
         }
       ]
@@ -584,21 +584,21 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* can you *" ,
+					"decomposition" : "(.*) can you (.*)" ,
           "reconstruction" : [
-            "You believe I can (2) don't you ?",
+            "You believe I can $2 don't you ?",
             "GOTO what",
-            "You want me to be able to (2).",
-            "Perhaps you would like to be able to (2) yourself."
+            "You want me to be able to $2.",
+            "Perhaps you would like to be able to $2 yourself."
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* can i *" ,
+					"decomposition" : "(.*) can i (.*)" ,
           "reconstruction" : [
-            "Whether or not you can (2) depends on you more than on me.",
-            "Do you want to be able to (2) ?",
-            "Perhaps you don't want to (2).",
+            "Whether or not you can $2 depends on you more than on me.",
+            "Do you want to be able to $2 ?",
+            "Perhaps you don't want to $2.",
             "GOTO what"
           ]
         }
@@ -610,7 +610,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "Why do you ask ?",
             "Does that question interest you ?",
@@ -631,7 +631,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "GOTO what"
           ]
@@ -644,7 +644,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "GOTO what"
           ]
@@ -657,7 +657,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "GOTO what"
           ]
@@ -670,7 +670,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "GOTO what"
           ]
@@ -683,7 +683,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "Is that the real reason ?",
             "Don't any other reasons come to mind ?",
@@ -699,29 +699,29 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* why don't you *",
+					"decomposition" : "(.*) why don't you (.*)",
           "reconstruction" : [
-            "Do you believe I don't (2) ?",
-            "Perhaps I will (2) in good time.",
-            "Should you (2) yourself ?",
-            "You want me to (2) ?",
+            "Do you believe I don't $2 ?",
+            "Perhaps I will $2 in good time.",
+            "Should you $2 yourself ?",
+            "You want me to $2 ?",
             "GOTO what"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "* why can't i *",
+					"decomposition" : "(.*) why can't i (.*)",
           "reconstruction" : [
-            "Do you think you should be able to (2) ?",
-            "Do you want to be able to (2) ?",
-            "Do you believe this will help you to (2) ?",
-            "Have you any idea why you can't (2) ?",
+            "Do you think you should be able to $2 ?",
+            "Do you want to be able to $2 ?",
+            "Do you believe this will help you to $2 ?",
+            "Have you any idea why you can't $2 ?",
             "GOTO what"
           ]
         },
         {
           "memorise" : false,
-					"decomposition" : "*",
+					"decomposition" : "(.*)",
           "reconstruction" : [
             "GOTO what"
           ]
@@ -734,10 +734,10 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* @everyone *",
+					"decomposition" : "(.*) @everyone (.*)",
           "reconstruction" : [
-            "Really, (2) ?",
-            "Surely not (2).",
+            "Really, $2 ?",
+            "Surely not $2.",
             "Can you think of anyone in particular ?",
             "Who, for example?",
             "Are you thinking of a very special person ?",
@@ -755,7 +755,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "GOTO everyone"
           ]
@@ -768,7 +768,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "GOTO everyone"
           ]
@@ -781,7 +781,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "GOTO everyone"
           ]
@@ -794,7 +794,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "Can you think of a specific example ?",
             "When ?",
@@ -810,7 +810,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "In what way ?",
             "What resemblence do you see ?",
@@ -830,7 +830,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "* @be *like *" ,
+					"decomposition" : "(.*) @be (.*)like (.*)" ,
           "reconstruction" : [
             "GOTO alike"
           ]
@@ -843,7 +843,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition" : "*" ,
+					"decomposition" : "(.*)" ,
           "reconstruction" : [
             "How is it different ?",
             "What differences do you see ?",

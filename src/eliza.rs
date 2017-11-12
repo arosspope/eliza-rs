@@ -1,5 +1,5 @@
 use std::error::Error;
-use std::collections::VecDeque;
+use std::collections::{VecDeque, HashMap};
 use regex::{Regex, Captures};
 
 use script_loader::ScriptLoader;
@@ -25,7 +25,8 @@ pub struct Eliza {
     transforms : Transforms,        //TODO: Things to transform in post processing?
     synonyms : Synonyms,            //TODO: Common synonyms
     reflections : Reflections,      //TODO: Applied before checking composition rules?
-    memory : VecDeque<String>,           //TODO: A collection of things the user has said in previous conversation
+    memory : VecDeque<String>,      //TODO: A collection of things the user has said in previous conversation
+    rule_usage : HashMap<String, usize>,
 }
 
 impl Eliza {
@@ -61,6 +62,7 @@ impl Eliza {
                 Reflections::load(script_location)?
             },
             memory: VecDeque::new(),
+            rule_usage: HashMap::new(),
         };
 
         Ok(e)
@@ -110,41 +112,7 @@ impl Eliza {
         }
     }
 
-    fn reconstruct(&self, rule: &str, captures: Captures) -> Option<String> {
-        let mut response: Option<String> = None;
-        let mut temp = String::from(rule);
-        let mut ok = true;
-
-        //For each word, see if we need to swap anything out for a capture
-        let words = get_words(rule);
-        for w in &words {
-            if w.contains("$"){
-                //Format example 'What makes you think I am $2 ?' which uses the second capture
-                //group of the regex
-                if let Ok(n) = w.replace("$", "").parse::<usize>() {
-                    if n < captures.len() + 1 { //indexing starts at 1
-                        temp = temp.replace(w, &captures[n]);
-                    } else {
-                        ok = false;
-                        println!("Outside of capture range"); //TODO: Print debug
-                        break;
-                    }
-                } else {
-                    ok = false;
-                    println!("Not a valid capture group"); //Debug
-                    break;
-                }
-            }
-        }
-
-        if ok {
-            Some(temp)
-        } else {
-            None
-        }
-    }
-
-    fn find_response(&self, phrase: &str, keystack: Vec<Keyword>) -> Option<String> {
+    fn find_response(&mut self, phrase: &str, keystack: Vec<Keyword>) -> Option<String> {
         let mut response = None;
 
         for k in keystack {
@@ -152,14 +120,15 @@ impl Eliza {
                 //TODO: Static lazy loading??
                 if let Ok(re) = Regex::new(&rule.decomposition) {
                     if let Some(cap) = re.captures(phrase) {
-                        for recon in rule.reconstruction {
-                            //TODO: find best reconstructing rule, remove self
-                            self.reconstruct(rule, cap);
+                        //A match was found: find the best reconstruction rule
+                        if let Some(recon) = self.best_recon_rule(rule.reconstruction) {
+                            response = reconstruct(&recon, &cap);
+                            //TODO: if memory -> put into memory stack and DONT break
+                            break;
                         }
-
-                    } //Else nothing was captured.
+                    }
                 } else {
-                    println!("Bad rule")
+                    eprintln!("[ERR] Invalid decompostion rule: '{}'", rule.decomposition);
                 }
             }
         }
@@ -179,6 +148,38 @@ impl Eliza {
         response
     }
 
+    fn best_recon_rule(&mut self, rules: Vec<String>) -> Option<String> {
+        let mut best_rule: Option<String> = None;
+        let mut count: Option<usize> = None;
+
+        for rule in rules {
+            match self.rule_usage.contains_key(&rule) {
+                true => {
+                    //If it has already been used, get its usage count
+                    let usage = self.rule_usage[&rule];
+                    if let Some(c) = count {
+                        if usage < c {
+                            //The usage is less than the running total
+                            best_rule = Some(rule.clone());
+                            count = Some(usage);
+                        }
+                    } else {
+                        //The count has yet to be updated, this is the best usage so far
+                        best_rule = Some(rule.clone());
+                        count = Some(usage);
+                    }
+                },
+                false => {
+                    //The rule has never been used before - this has precedence
+                    best_rule = Some(rule.clone());
+                    self.rule_usage.insert(rule, 1);
+                    break;
+                }
+            }
+        }
+
+        best_rule
+    }
 
     fn transform_input(&self, input: &str) -> String {
         let mut transformed = String::from(input);
@@ -220,6 +221,43 @@ impl Eliza {
     }
 }
 
+fn reconstruct(rule: &str, captures: &Captures) -> Option<String> {
+    //TODO: Better way using regex replace all?
+    //TODO: Must include note about being whitespace before '?'
+    let mut temp = String::from(rule);
+    let mut ok = true;
+    let words = get_words(rule);
+
+    //For each word, see if we need to swap anything out for a capture
+    for w in &words {
+        if w.contains("$"){
+            //Format example 'What makes you think I am $2 ?' which
+            //uses the second capture group of the regex
+            if let Ok(n) = w.replace("$", "").parse::<usize>() {
+                if n < captures.len() + 1 { //indexing starts at 1
+                    temp = temp.replace(w, &captures[n]);
+                } else {
+                    ok = false;
+                    eprintln!("[ERR] {} is outside capture range in: '{}'", n, rule);
+                }
+            } else {
+                ok = false;
+                eprintln!("[ERR] Contains invalid capture id: '{}'", rule);
+            }
+        }
+
+        if !ok {
+            break;
+        }
+    }
+
+    if ok {
+        Some(temp)
+    } else {
+        None
+    }
+}
+
 fn get_phrases(input: &str) -> Vec<String> {
     input.split(|c| c == '.' || c == ',' || c == '?').map(|s| s.to_string()).collect()
 }
@@ -245,37 +283,76 @@ mod tests {
         let before = "2012-03-14, 2013-01-01 and 2014-07-05";
         let after = re.replace_all(before, "$m/$d/$y");
         assert_eq!(after, "03/14/2012, 01/01/2013 and 07/05/2014");
+
+
+        let re = Regex::new(r"(.*) you are (.*)").unwrap();
+        let phrase = "I think";
+        let cap = re.captures(phrase);
+        assert!(cap.is_none());
     }
 
     #[test]
-    fn regex_test2(){
+    fn best_rule_equal(){
+        let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
+
+        //Create a fake rule usage HashMap
+        let mut usages: HashMap<String, usize> = HashMap::new();
+        usages.insert("first".to_string(), 1);
+        usages.insert("second".to_string(), 1);
+        usages.insert("third".to_string(), 1);
+        usages.insert("fourth".to_string(), 1);
+
+        //All equal precedence, should just return the first
+        e.rule_usage = usages;
+        assert_eq!("first", e.best_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+    }
+
+    #[test]
+    fn best_rule_smaller(){
+        let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
+
+        //Create a fake rule usage HashMap
+        let mut usages: HashMap<String, usize> = HashMap::new();
+        usages.insert("first".to_string(), 7);
+        usages.insert("second".to_string(), 3);
+        usages.insert("third".to_string(), 2);
+        usages.insert("fourth".to_string(), 10);
+
+        //One has been used less than the rest
+        e.rule_usage = usages;
+        assert_eq!("third", e.best_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+    }
+
+    #[test]
+    fn best_rule_none(){
+        let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
+
+        //Create a fake rule usage HashMap
+        let mut usages: HashMap<String, usize> = HashMap::new();
+        usages.insert("first".to_string(), 7);
+        usages.insert("second".to_string(), 3);
+        usages.insert("third".to_string(), 2);
+
+        //One has never been used
+        e.rule_usage = usages;
+        assert_eq!("fourth", e.best_recon_rule(vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!(1, e.rule_usage["fourth"]);
+    }
+
+    #[test]
+    fn reconstruction(){
         let re = Regex::new(r"(.*) you are (.*)").unwrap();
         let phrase = "I think that you are so stupid";
         let cap = re.captures(phrase).unwrap();
 
-        assert_eq!("I think that", &cap[1]);
-        assert_eq!("so stupid", &cap[2]);
+        let res = reconstruct("What makes you think I am $2 ?", &cap);
+        assert_eq!(res.unwrap(), "What makes you think I am so stupid ?");
 
-        let mut response = String::from("What makes you think I am $5 ?");
-        let words = get_words(&response);
+        let res = reconstruct("What makes you think I am $5 ?", &cap);
+        assert!(res.is_none());
 
-        for w in &words {
-            if w.contains("$"){
-                let num = w.replace("$", "").parse::<usize>();
-
-                if let Ok(n) = num {
-                    if n < cap.len() + 1 { //indexing starts at 1
-                        response = response.replace(w, &cap[n]);
-                    } else {
-                        println!("Outside of capture range");
-                    }
-                } else {
-                    println!("Not a valid capture group"); //Debug
-                }
-            }
-        }
-
-        assert_eq!(response, "What makes you think I am so stupid?");
+        let res = reconstruct("What makes you think I am $a ?", &cap);
+        assert!(res.is_none());
     }
 
     #[test]
