@@ -3,8 +3,8 @@ use script_loader::ScriptLoader;
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Rule {
     pub memorise: bool,
-    pub decomposition : String,
-    pub reconstruction : Vec<String>,
+    pub decomposition_rule : String,
+    pub reassembly_rules : Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

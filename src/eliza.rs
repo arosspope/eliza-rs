@@ -3,6 +3,7 @@ use alphabet::Alphabet;
 
 use std::error::Error;
 use std::collections::{VecDeque, HashMap};
+use std::borrow::BorrowMut;
 use regex::{Regex, Captures};
 
 use script_loader::ScriptLoader;
@@ -96,13 +97,12 @@ impl Eliza {
         //Convert the input to lowercase and replace certain words before splitting up the input
         //into phrases and their word parts
         let phrases = get_phrases(&self.transform_input(&input.to_lowercase()));
-
-        let (active_phrase, keystack) = self.populate_keystack(phrases);
+        let (active_phrase, mut keystack) = self.populate_keystack(phrases);
 
         let mut response: Option<String> = None;
 
         if let Some(phrase) = active_phrase {
-            response = self.find_response(&phrase, keystack);
+            response = self.get_response(&phrase, &mut keystack);
         }
 
         if let Some(res) = response {
@@ -115,32 +115,47 @@ impl Eliza {
         }
     }
 
-    fn find_response(&mut self, phrase: &str, keystack: Vec<Keyword>) -> Option<String> {
-        let mut response = None;
+    fn get_response(&mut self, phrase: &str, keystack: &mut VecDeque<Keyword>) -> Option<String> {
+        let mut response: Option<String> = None;
 
-        'outer: for k in keystack {
-            for rule in k.rules {
-                //TODO: Static lazy loading??
+        //Search for a response while the keystack is not empty
+        'search: while response.is_none() && !keystack.is_empty(){
+            let next = keystack.pop_front().unwrap(); //safe due to prior check
 
-                //Get permutations of the decomposition rule (rules with the '@' symbol)
-                let re_perms = rule_permutations(&rule.decomposition, &self.synonyms.synonyms);
+            //For each rule set, attempt to decompose phrase then reassemble a response
+            'decompostion: for r in next.rules {
+                //Get all regex permutations of the decomposition rule (dependent upon synonyms)
+                let regexes = permutations(&r.decomposition_rule, &self.synonyms.synonyms);
+                for re in regexes {
+                    if let Some(cap) = re.captures(phrase)
+                    {
+                        //A match was found: find the best reassembly rule to use
+                        if let Some(assem) = self.get_reassembly(&r.reassembly_rules)
+                        {
+                            if let Some(goto) = is_goto(&assem) {
+                                //The best rule was a goto, push associated key entry to stack
+                                if let Some(entry) =
+                                    self.kwords.keywords.iter().find(|ref a| a.key == goto)
+                                {
+                                    //Push to front of keystack and skip to it
+                                    keystack.push_front(entry.clone());
+                                    break 'decompostion;
+                                } else {
+                                    eprintln!("[ERR] No such keyword: '{}'", goto);
+                                    continue; //Something wrong with this GOTO
+                                }
+                            }
 
-                for re in re_perms {
-                    if let Some(cap) = re.captures(phrase) {
-                        //A match was found: find the best reconstruction rule
-                        if let Some(recon) = self.get_recon_rule(&rule.reconstruction) {
-                            //TODO: if best rule contained 'GOTO' do that...
-
-                            response = reconstruct(&recon, &cap, &self.reflections.reflections);
-
+                            //Attempt to reconstruct given the capture groups
+                            response = reconstruct(&assem, &cap, &self.reflections.reflections);
                             if response.is_some(){
-                                if rule.memorise {
+                                if r.memorise {
                                     //We'll save this response for later...
                                     self.memory.push_back(response.unwrap());
                                     response = None;
                                 } else {
                                     //We found a response, exit
-                                    break 'outer;
+                                    break 'search;
                                 }
                             }
                         }
@@ -149,20 +164,10 @@ impl Eliza {
             }
         }
 
-        //for each decompostion rule attempt to match
-            //We found a match
-            //For each recomoposition rule
-                //If not in hashmap, add and set number to 1
-                //Otherwise loop through each rule and find the smallest one
-                //when found, increment its use count and add to self
-            //Parse rule and replace '(2)' with the matching group
-
-
-        //TODO: GOTO
         response
     }
 
-    fn get_recon_rule(&mut self, rules: &[String]) -> Option<String> {
+    fn get_reassembly(&mut self, rules: &[String]) -> Option<String> {
         let mut best_rule: Option<String> = None;
         let mut count: Option<usize> = None;
 
@@ -214,7 +219,7 @@ impl Eliza {
         transformed
     }
 
-    fn populate_keystack(&self, phrases: Vec<String>) -> (Option<String>, Vec<Keyword>)
+    fn populate_keystack(&self, phrases: Vec<String>) -> (Option<String>, VecDeque<Keyword>)
     {
         let mut keystack: Vec<Keyword> = Vec::new();
         let mut active_phrase: Option<String> = None;
@@ -238,23 +243,23 @@ impl Eliza {
         //sort the keystack with highest rank first
         keystack.sort_by(|a,b| b.rank.cmp(&a.rank));
 
-        (active_phrase, keystack)
+        (active_phrase, VecDeque::from(keystack))
     }
 }
 
-fn rule_permutations(rule: &str, synonyms: &[Synonym]) -> Vec<Regex> {
+fn permutations(decomposition: &str, synonyms: &[Synonym]) -> Vec<Regex> {
     let mut permutations: Vec<String> = Vec::new();
     let mut re_perms: Vec<Regex> = Vec::new();
-    let words = get_words(rule);
+    let words = get_words(decomposition);
 
-    if rule.matches('@').count() > 1 {
-        eprintln!("[ERR] Decomposition rules can have (at most) 1 synonym: '{}'", rule);
+    if decomposition.matches('@').count() > 1 {
+        eprintln!("[ERR] Decomposition rules can have (at most) 1 synonym: '{}'", decomposition);
         return re_perms;
     }
 
     //If no '@' symbol then just add to permutations
-    if rule.matches('@').count() == 0 {
-        permutations.push(rule.to_string());
+    if decomposition.matches('@').count() == 0 {
+        permutations.push(decomposition.to_string());
     }
 
     for w in &words {
@@ -263,7 +268,7 @@ fn rule_permutations(rule: &str, synonyms: &[Synonym]) -> Vec<Regex> {
             let scrubbed = alphabet::STANDARD.scrub(w);
             if let Some(synonym) = synonyms.iter().find(|ref s| s.word == scrubbed) {
                 for equivalent in &synonym.equivalents {
-                    permutations.push(rule.replace(&scrubbed, &equivalent).replace('@', ""));
+                    permutations.push(decomposition.replace(&scrubbed, &equivalent).replace('@', ""));
                 }
             }
         }
@@ -273,7 +278,7 @@ fn rule_permutations(rule: &str, synonyms: &[Synonym]) -> Vec<Regex> {
         if let Ok(re) = Regex::new(&p) {
             re_perms.push(re)
         } else {
-            eprintln!("[ERR] Invalid decompostion rule: '{}'", rule);
+            eprintln!("[ERR] Invalid decompostion rule: '{}'", decomposition);
         }
     }
 
@@ -357,6 +362,14 @@ fn get_words(phrase: &str) -> Vec<String> {
     phrase.split_whitespace().map(|s| s.to_string()).collect()
 }
 
+//Returns NONE is not goto, otherwise reutrns goto statement
+fn is_goto(statement: &str) -> Option<String> {
+    match statement.contains("GOTO"){
+        true => Some(statement.replace("GOTO", "").replace(char::is_whitespace, "")),
+        false => None,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -389,7 +402,7 @@ mod tests {
             equivalents: vec!("brother".to_string(), "mother".to_string())
         });
 
-        let re_perms = rule_permutations("(.*)my (.* @family)", &synonyms);
+        let re_perms = permutations("(.*)my (.* @family)", &synonyms);
         assert_eq!("(.*)my (.* brother)", re_perms[0].as_str());
         assert_eq!("(.*)my (.* mother)", re_perms[1].as_str());
     }
@@ -401,7 +414,7 @@ mod tests {
             equivalents: vec!("brother".to_string(), "mother".to_string())
         });
 
-        let re_perms = rule_permutations("(.*)my (.* @family @fail)", &synonyms);
+        let re_perms = permutations("(.*)my (.* @family @fail)", &synonyms);
         assert!(re_perms.is_empty());
     }
 
@@ -412,7 +425,7 @@ mod tests {
             equivalents: vec!("brother".to_string(), "mother".to_string())
         });
 
-        let re_perms = rule_permutations("(.*)my (.* dog)", &synonyms);
+        let re_perms = permutations("(.*)my (.* dog)", &synonyms);
         assert_eq!(1, re_perms.len());
         assert_eq!("(.*)my (.* dog)", re_perms[0].as_str());
     }
@@ -430,7 +443,7 @@ mod tests {
 
         //All equal precedence, should just return the first
         e.rule_usage = usages;
-        assert_eq!("first", e.get_recon_rule(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("first", e.get_reassembly(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(2, e.rule_usage["first"]);
     }
 
@@ -447,7 +460,7 @@ mod tests {
 
         //One has been used less than the rest
         e.rule_usage = usages;
-        assert_eq!("third", e.get_recon_rule(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("third", e.get_reassembly(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(3, e.rule_usage["third"]);
     }
 
@@ -463,7 +476,7 @@ mod tests {
 
         //One has never been used
         e.rule_usage = usages;
-        assert_eq!("fourth", e.get_recon_rule(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("fourth", e.get_reassembly(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(1, e.rule_usage["fourth"]);
     }
 
