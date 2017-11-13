@@ -1,3 +1,6 @@
+use alphabet;
+use alphabet::Alphabet;
+
 use std::error::Error;
 use std::collections::{VecDeque, HashMap};
 use regex::{Regex, Captures};
@@ -119,7 +122,6 @@ impl Eliza {
             for rule in k.rules {
                 //TODO: Static lazy loading??
 
-                //TODO: get a permutation of the regex with @sybmbols
                 //Get permutations of the decomposition rule (rules with the '@' symbol)
                 let re_perms = rule_permutations(&rule.decomposition, &self.synonyms.synonyms);
 
@@ -128,7 +130,7 @@ impl Eliza {
                         //A match was found: find the best reconstruction rule
                         if let Some(recon) = self.get_recon_rule(&rule.reconstruction) {
                             //TODO: if best rule contained 'GOTO' do that...
-                            
+
                             response = reconstruct(&recon, &cap, &self.reflections.reflections);
 
                             if response.is_some(){
@@ -156,9 +158,7 @@ impl Eliza {
             //Parse rule and replace '(2)' with the matching group
 
 
-        //TODO: Swap synonyms when '@' symbol is encountered
-        //TODO: Store to memory when 'memorise' is true
-
+        //TODO: GOTO
         response
     }
 
@@ -243,15 +243,41 @@ impl Eliza {
 }
 
 fn rule_permutations(rule: &str, synonyms: &[Synonym]) -> Vec<Regex> {
-    let mut permutations: Vec<Regex> = Vec::new();
+    let mut permutations: Vec<String> = Vec::new();
+    let mut re_perms: Vec<Regex> = Vec::new();
+    let words = get_words(rule);
 
-    if let Ok(re) = Regex::new(rule) {
-        permutations.push(re)
-    } else {
-        eprintln!("[ERR] Invalid decompostion rule: '{}'", rule);
+    if rule.matches('@').count() > 1 {
+        eprintln!("[ERR] Decomposition rules can have (at most) 1 synonym: '{}'", rule);
+        return re_perms;
     }
 
-    permutations
+    //If no '@' symbol then just add to permutations
+    if rule.matches('@').count() == 0 {
+        permutations.push(rule.to_string());
+    }
+
+    for w in &words {
+        if w.contains("@"){
+            //Format example: '(.*) my (.* @family)'
+            let scrubbed = alphabet::STANDARD.scrub(w);
+            if let Some(synonym) = synonyms.iter().find(|ref s| s.word == scrubbed) {
+                for equivalent in &synonym.equivalents {
+                    permutations.push(rule.replace(&scrubbed, &equivalent).replace('@', ""));
+                }
+            }
+        }
+    }
+
+    for p in permutations {
+        if let Ok(re) = Regex::new(&p) {
+            re_perms.push(re)
+        } else {
+            eprintln!("[ERR] Invalid decompostion rule: '{}'", rule);
+        }
+    }
+
+    re_perms
 }
 
 fn reconstruct(rule: &str, captures: &Captures, reflections: &[Reflection]) -> Option<String>
@@ -267,7 +293,8 @@ fn reconstruct(rule: &str, captures: &Captures, reflections: &[Reflection]) -> O
         if w.contains("$"){
             //Format example 'What makes you think I am $2 ?' which
             //uses the second capture group of the regex
-            if let Ok(n) = w.replace("$", "").parse::<usize>() {
+            let scrubbed = alphabet::ALPHANUMERIC.scrub(w);
+            if let Ok(n) = scrubbed.parse::<usize>() {
                 if n < captures.len() + 1 { //indexing starts at 1
                     //Perform reflection on the capture before subsitution
                     temp = temp.replace(w, &reflect(&captures[n], reflections));
@@ -353,6 +380,18 @@ mod tests {
         let phrase = "I think";
         let cap = re.captures(phrase);
         assert!(cap.is_none());
+    }
+
+    #[test]
+    fn decon_permutations(){
+        let synonyms: Vec<Synonym> = vec!(Synonym {
+            word: "family".to_string(),
+            equivalents: vec!("brother".to_string(), "mother".to_string())
+        });
+
+        let re_perms = rule_permutations("(.*)my (.* @family)", &synonyms);
+        assert_eq!("(.*)my (.* brother)", re_perms[0].as_str());
+        assert_eq!("(.*)my (.* mother)", re_perms[1].as_str());
     }
 
     #[test]
@@ -504,10 +543,5 @@ mod tests {
         assert_eq!("my", keystack[1].key);
         assert_eq!("i", keystack[2].key);
         assert_eq!("are", keystack[3].key);
-    }
-
-    #[test]
-    fn keylist(){
-        let e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
     }
 }

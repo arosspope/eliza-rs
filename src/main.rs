@@ -13,6 +13,7 @@ mod reflections;
 mod synonyms;
 mod transforms;
 mod script_loader;
+mod alphabet;
 
 use eliza::Eliza;
 
