@@ -19,10 +19,6 @@ mod script;
 use eliza::Eliza;
 
 fn main() {
-    //TODO: Munge script parts into one script
-    //TODO: Fallback script
-    //TODO: All print statements (expect elisa response) should go to info or warn or error
-    //TODO: memorise keywords0
     //TODO: unit tests
     //TODO: boxed results vs. eprintln
 

@@ -255,7 +255,6 @@ fn permutations(decomposition: &str, synonyms: &[Synonym]) -> Vec<Regex> {
 fn assemble(rule: &str, captures: &Captures, reflections: &[Reflection]) -> Option<String>
 {
     //TODO: Better way using regex replace all?
-    //TODO: Must include note about being whitespace before '?'
     let mut temp = String::from(rule);
     let mut ok = true;
     let words = get_words(rule);
@@ -269,7 +268,7 @@ fn assemble(rule: &str, captures: &Captures, reflections: &[Reflection]) -> Opti
             if let Ok(n) = scrubbed.parse::<usize>() {
                 if n < captures.len() + 1 { //indexing starts at 1
                     //Perform reflection on the capture before subsitution
-                    temp = temp.replace(w, &reflect(&captures[n], reflections));
+                    temp = temp.replace(&scrubbed, &reflect(&captures[n], reflections)).replace("$", "");
                 } else {
                     ok = false;
                     eprintln!("[ERR] {} is outside capture range in: '{}'", n, rule);
@@ -340,12 +339,12 @@ fn is_goto(statement: &str) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use keywords::Rule;
+    use script::{Rule};
 
     #[test]
     fn loading_eliza_okay() {
         //TODO: Decouple tests from input json files
-        assert!(Eliza::new("scripts/rogerian_psychiatrist").is_ok());
+        assert!(Eliza::new("scripts/rogerian_psychiatrist.json").is_ok());
     }
 
     #[test]
@@ -385,7 +384,7 @@ mod tests {
 
     #[test]
     fn assemble_rule_equal(){
-        let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
+        let mut e = Eliza::new("scripts/rogerian_psychiatrist.json").unwrap();
 
         //Create a fake rule usage HashMap
         let mut usages: HashMap<String, usize> = HashMap::new();
@@ -402,7 +401,7 @@ mod tests {
 
     #[test]
     fn assemble_rule_smaller(){
-        let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
+        let mut e = Eliza::new("scripts/rogerian_psychiatrist.json").unwrap();
 
         //Create a fake rule usage HashMap
         let mut usages: HashMap<String, usize> = HashMap::new();
@@ -419,7 +418,7 @@ mod tests {
 
     #[test]
     fn assemble_rule_unknown(){
-        let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
+        let mut e = Eliza::new("scripts/rogerian_psychiatrist.json").unwrap();
 
         //Create a fake rule usage HashMap
         let mut usages: HashMap<String, usize> = HashMap::new();
@@ -440,8 +439,8 @@ mod tests {
         let phrase = "I think that you are so stupid";
         let cap = re.captures(phrase).unwrap();
 
-        let res = assemble("What makes you think I am $2 ?", &cap, &reflections);
-        assert_eq!(res.unwrap(), "What makes you think I am so stupid ?");
+        let res = assemble("What makes you think I am $2?", &cap, &reflections);
+        assert_eq!(res.unwrap(), "What makes you think I am so stupid?");
     }
 
     #[test]
