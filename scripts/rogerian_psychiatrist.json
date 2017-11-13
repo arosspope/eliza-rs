@@ -9,21 +9,21 @@
     "Goodbye.  This was really a nice talk.",
     "Goodbye.  I'm looking forward to our next session.",
     "This was a good session, wasn't it -- but time is over now.   Goodbye.",
-    "Maybe we could discuss this moreover in our next session ?   Goodbye."
+    "Maybe we could discuss this moreover in our next session?   Goodbye."
   ],
   "fallbacks" : [
     "I'm not sure I understand you fully.",
     "Please go on.",
-    "What does that suggest to you ?",
-    "Do you feel strongly about discussing such things ?",
+    "What does that suggest to you?",
+    "Do you feel strongly about discussing such things?",
     "That is interesting.  Please continue.",
     "Tell me more about that.",
-    "Does talking about this bother you ?"
+    "Does talking about this bother you?"
   ],
   "transforms" : [
-    { "word" : "dont", "equivalents" : ["don't"]},
-    { "word" : "cant", "equivalents":["can't"]},
-    { "word" : "wont", "equivalents" : ["won't"]},
+    { "word" : "dont", "equivalents" : ["don't", "do not"]},
+    { "word" : "cant", "equivalents":["can't", "cannot"]},
+    { "word" : "wont", "equivalents" : ["won't", "will not"]},
     { "word" : "remember", "equivalents" : ["recollect", "recall"]},
     { "word" : "dreamed", "equivalents" : ["dreamt"]},
     { "word" : "dream", "equivalents" : ["dreams"]},
@@ -31,20 +31,22 @@
     { "word" : "yes", "equivalents" : ["certainly", "okay"]},
     { "word" : "computer", "equivalents" : ["machine", "machines", "computers"]},
     { "word" : "was", "equivalents" : ["were"]},
-    { "word" : "you are", "equivalents" : ["you're"]},
-    { "word" : "i am", "equivalents" : ["i'm"]
+    { "word" : "you are", "equivalents" : ["you're", "youre"]},
+    { "word" : "i am", "equivalents" : ["i'm", "im"]
     },
-    { "word" : "alike", "equivalents" : ["same", "identical", "equivalent"]}
+    { "word" : "alike", "equivalents" : ["same", "identical", "equivalent"]},
+    { "word" : "sorry", "equivalents" : ["apologise"]},
+    { "word" : "we would", "equivalents" : ["we'd"]}
   ],
   "synonyms" : [
-    { "word" : "be", "equivalents" : ["am", "is", "are", "was"]},
-    { "word" : "belief", "equivalents" : ["feel", "think", "believe", "wish"]},
-    { "word" : "cannot", "equivalents" : ["can't"]},
-    { "word" : "desire", "equivalents" : ["want", "need"]},
-    { "word" : "everyone", "equivalents" : ["everybody", "nobody", "noone"]},
-    { "word" : "family", "equivalents" : ["mother", "mom", "father", "dad", "sister", "brother", "wife", "children", "child"]},
-    { "word" : "happy", "equivalents" : ["elated", "glad", "better"]},
-    { "word" : "sad", "equivalents" : ["unhappy", "depressed", "sick"]}
+    { "word" : "be", "equivalents" : ["am", "is", "are", "was", "be"]},
+    { "word" : "belief", "equivalents" : ["feel", "think", "believe", "wish", "belief"]},
+    { "word" : "cannot", "equivalents" : ["can't", "cannot"]},
+    { "word" : "desire", "equivalents" : ["want", "need", "desire"]},
+    { "word" : "everyone", "equivalents" : ["everybody", "nobody", "noone", "everyone"]},
+    { "word" : "family", "equivalents" : ["mother", "mom", "father", "dad", "sister", "brother", "wife", "children", "child", "family"]},
+    { "word" : "happy", "equivalents" : ["elated", "glad", "better", "happy"]},
+    { "word" : "sad", "equivalents" : ["unhappy", "depressed", "sick", "sad"]}
   ],
   "reflections" : [
     { "word" : "am", "inverse" : "are", "twoway" : false},
@@ -52,7 +54,9 @@
     { "word" : "me", "inverse" : "you", "twoway" : false},
     { "word" : "myself", "inverse" : "yourself", "twoway" : true},
     { "word" : "i", "inverse" : "you", "twoway" : true},
-    { "word" : "i am", "inverse" : "you are", "twoway" : false}
+    { "word" : "i am", "inverse" : "you are", "twoway" : false},
+    { "word" : "was", "inverse": "were", "twoway": false},
+    { "word" : "we", "inverse": "you", "twoway": false}
   ],
   "keywords" : [
     {
@@ -61,7 +65,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)",
+					"decomposition_rule" : "(.+)",
           "reassembly_rules" : [
             "Please don't apologise.",
             "Apologies are not necessary.",
@@ -72,52 +76,39 @@
       ]
     },
     {
-      "key" : "apologise",
-			"rank" : 0,
-      "rules" : [
-        {
-          "memorise" : false,
-					"decomposition_rule" : "(.*)",
-          "reassembly_rules" : [
-            "GOTO sorry"
-          ]
-        }
-      ]
-    },
-    {
       "key" : "remember",
 			"rank" : 5,
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i remember (.*)",
+					"decomposition_rule" : "(.*)i remember(.+)",
           "reassembly_rules" : [
-            "Do you often think of $2 ?",
-            "Does thinking of $2 bring anything else to mind ?",
-            "What else do you recollect ?",
-            "Why do you remember $2 just now ?",
-            "What in the present situation reminds you of $2 ?",
-            "What is the connection between me and $2 ?",
-            "What else does $2 remind you of ?"
+            "Do you often think of $2?",
+            "Does thinking of $2 bring anything else to mind?",
+            "What else do you recollect?",
+            "Why do you remember $2 just now?",
+            "What in the present situation reminds you of $2?",
+            "What is the connection between me and $2?",
+            "What else does $2 remind you of?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) do you remember (.*)",
+					"decomposition_rule" : "(.*)do you remember(.+)",
           "reassembly_rules" : [
-            "Did you think I would forget $2 ?",
-            "Why do you think I should recall $2 now ?",
-            "What about $2 ?",
-            "You mentioned $2 ?",
+            "Did you think I would forget $2?",
+            "Why do you think I should recall $2 now?",
+            "What about $2?",
+            "You mentioned $2?",
             "GOTO what"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) you remember (.*)",
+					"decomposition_rule" : "(.*)you remember(.+)",
           "reassembly_rules" : [
-            "How could I forget $2 ?",
-            "What about $2 should I remember ?",
+            "How could I forget $2?",
+            "What about $2 should I remember?",
             "GOTO you"
           ]
         }
@@ -129,25 +120,25 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i forget (.*)",
+					"decomposition_rule" : "(.*)i forget(.+)",
           "reassembly_rules" : [
-            "Can you think of why you might forget $2 ?",
-            "Why can't you remember $2 ?",
-            "How often do you think of $2 ?",
-            "Does it bother you to forget that ?",
-            "Could it be a mental block ?",
-            "Are you generally forgetful ?",
-            "Do you think you are suppressing $2 ?"
+            "Can you think of why you might forget $2?",
+            "Why can't you remember $2?",
+            "How often do you think of $2?",
+            "Does it bother you to forget that?",
+            "Could it be a mental block?",
+            "Are you generally forgetful?",
+            "Do you think you are suppressing $2?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) did you forget (.*)",
+					"decomposition_rule" : "(.*)did you forget(.+)",
           "reassembly_rules" : [
-            "Why do you ask ?",
-            "Are you sure you told me ?",
-            "Would it bother you if I forgot $2 ?",
-            "Why should I recall $2 just now ?",
+            "Why do you ask?",
+            "Are you sure you told me?",
+            "Would it bother you if I forgot $2?",
+            "Why should I recall $2 just now?",
             "GOTO what",
             "Tell me more about $2."
           ]
@@ -160,15 +151,15 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) if (.*)",
+					"decomposition_rule" : "(.*)if(.+)",
           "reassembly_rules" : [
-            "Do you think it's likely that $2 ?",
-            "Do you wish that $2 ?",
-            "What do you know about $2 ?",
-            "Really, if $2 ?",
-            "What would you do if $2 ?",
-            "But what are the chances that $2 ?",
-            "What does this speculation lead to ?"
+            "Do you think it's likely that $2?",
+            "Do you wish that $2?",
+            "What do you know about $2?",
+            "Really, if $2?",
+            "What would you do if $2?",
+            "But what are the chances that $2?",
+            "What does this speculation lead to?"
           ]
         }
       ]
@@ -179,11 +170,11 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i dreamed (.*)",
+					"decomposition_rule" : "(.*)i dreamed(.+)",
           "reassembly_rules" : [
-            "Really, $2 ?",
-            "Have you ever fantasized $2 while you were awake ?",
-            "Have you ever dreamed $2 before ?",
+            "Really, $2?",
+            "Have you ever fantasized $2 while you were awake?",
+            "Have you ever dreamed $2 before?",
             "GOTO dream"
           ]
         }
@@ -195,12 +186,12 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)",
+					"decomposition_rule" : "(.+)",
           "reassembly_rules" : [
-            "Really, $2 ?",
-            "Have you ever fantasized $2 while you were awake ?",
-            "Have you ever dreamed $2 before ?",
-            "GOTO dream"
+            "What does that dream suggest to you?",
+            "Do you dream often?",
+            "What persons appear in your dreams?",
+            "Do you believe that dreams have something to do with your problem?"
           ]
         }
       ]
@@ -211,14 +202,14 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)",
+					"decomposition_rule" : "(.+)",
           "reassembly_rules" : [
             "You don't seem quite certain.",
-            "Why the uncertain tone ?",
-            "Can't you be more positive ?",
-            "You aren't sure ?",
-            "Don't you know ?",
-            "How likely, would you estimate ?"
+            "Why the uncertain tone?",
+            "Can't you be more positive?",
+            "You aren't sure?",
+            "Don't you know?",
+            "How likely, would you estimate?"
           ]
         }
       ]
@@ -229,7 +220,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)",
+					"decomposition_rule" : "(.+)",
           "reassembly_rules" : [
             "I am not interested in names.",
             "I've told you before, I don't care about names -- please continue."
@@ -243,10 +234,10 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)",
+					"decomposition_rule" : "(.+)",
           "reassembly_rules" : [
             "How do you do.  Please state your problem.",
-            "Hi.  What seems to be your problem ?"
+            "Hi.  What seems to be your problem?"
           ]
         }
       ]
@@ -257,15 +248,15 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)",
+					"decomposition_rule" : "(.+)",
           "reassembly_rules" : [
-            "Do computers worry you ?",
-            "Why do you mention computers ?",
-            "What do you think machines have to do with your problem ?",
-            "Don't you think computers can help people ?",
-            "What about machines worries you ?",
-            "What do you think about machines ?",
-            "You don't think I am a computer program, do you ?"
+            "Do computers worry you?",
+            "Why do you mention computers?",
+            "What do you think machines have to do with your problem?",
+            "Don't you think computers can help people?",
+            "What about machines worries you?",
+            "What do you think about machines?",
+            "You don't think I am a computer program, do you?"
           ]
         }
       ]
@@ -276,27 +267,27 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) am i (.*)" ,
+					"decomposition_rule" : "(.*)am i(.+)" ,
           "reassembly_rules" : [
-            "Do you believe you are $2 ?",
-            "Would you want to be $2 ?",
-            "Do you wish I would tell you you are $2 ?",
-            "What would it mean if you were $2 ?",
+            "Do you believe you are $2?",
+            "Would you want to be $2?",
+            "Do you wish I would tell you you are $2?",
+            "What would it mean if you were $2?",
             "GOTO what"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i am (.*)" ,
+					"decomposition_rule" : "(.*)i am(.+)" ,
           "reassembly_rules" : [
             "GOTO i"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
-            "Why do you say 'am' ?",
+            "Why do you say 'am'?",
             "I don't understand that."
           ]
         }
@@ -308,34 +299,34 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) are you (.*)" ,
+					"decomposition_rule" : "(.*)are you(.+)" ,
           "reassembly_rules" : [
-            "Why are you interested in whether I am $2 or not ?",
-            "Would you prefer if I weren't $2 ?",
+            "Why are you interested in whether I am $2 or not?",
+            "Would you prefer if I weren't $2 ",
             "Perhaps I am $2 in your fantasies.",
-            "Do you sometimes think I am $2 ?",
+            "Do you sometimes think I am $2?",
             "GOTO what",
-            "Would it matter to you ?",
-            "What if I were $2 ?"
+            "Would it matter to you?",
+            "What if I were $2?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) you are (.*)" ,
+					"decomposition_rule" : "(.*)you are(.+)" ,
           "reassembly_rules" : [
             "GOTO you"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) are (.*)" ,
+					"decomposition_rule" : "(.*)are (.+) (.+)" ,
           "reassembly_rules" : [
-            "Did you think they might not be $2 ?",
-            "Would you like it if they were not $2 ?",
-            "What if they were not $2 ?",
-            "Are they always $2 ?",
-            "Possibly they are $2.",
-            "Are you positive they are $2 ?"
+            "Did you think they might not be $3?",
+            "Would you like it if they were not $3?",
+            "What if they were not $3?",
+            "Are they always $3?",
+            "Possibly they are $3.",
+            "Are you positive they are $3?"
           ]
         }
       ]
@@ -346,14 +337,14 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) your (.*)" ,
+					"decomposition_rule" : "(.*)your(.+)" ,
           "reassembly_rules" : [
-            "Why are you concerned over my $2 ?",
-            "What about your own $2 ?",
-            "Are you worried about someone else's $2 ?",
-            "Really, my $2 ?",
-            "What makes you think of my $2 ?",
-            "Do you want my $2 ?"
+            "Why are you concerned over my $2?",
+            "What about your own $2?",
+            "Are you worried about someone else's $2?",
+            "Really, my $2?",
+            "What makes you think of my $2?",
+            "Do you want my $2?"
           ]
         }
       ]
@@ -364,34 +355,34 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) was i (.*)" ,
+					"decomposition_rule" : "(.*)was i(.+)" ,
           "reassembly_rules" : [
-            "What if you were $2 ?",
-            "Do you think you were $2 ?",
-            "Were you $2 ?",
-            "What would it mean if you were $2 ?",
-            "What does ' $2 ' suggest to you ?",
+            "What if you were $2?",
+            "Do you think you were $2?",
+            "Were you $2?",
+            "What would it mean if you were $2?",
+            "What does '$2' suggest to you?",
             "GOTO what"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i was (.*)" ,
+					"decomposition_rule" : "(.*)i was(.+)" ,
           "reassembly_rules" : [
-            "Were you really ?",
-            "Why do you tell me you were $2 now ?",
+            "Were you really?",
+            "Why do you tell me you were $2 no?",
             "Perhaps I already know you were $2."
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) was you (.*)" ,
+					"decomposition_rule" : "(.*)was you(.+)" ,
           "reassembly_rules" : [
-            "Would you like to believe I was $2 ?",
-            "What suggests that I was $2 ?",
-            "What do you think ?",
+            "Would you like to believe I was $2?",
+            "What suggests that I was $2?",
+            "What do you think?",
             "Perhaps I was $2.",
-            "What if I had been $2 ?"
+            "What if I had been $2?"
           ]
         }
       ]
@@ -402,118 +393,118 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i @desire (.*)" ,
+					"decomposition_rule" : "(.*)i @desire(.+)" ,
           "reassembly_rules" : [
-            "What would it mean to you if you got $3 ?",
-            "Why do you want $3 ?",
-            "Suppose you got $3 soon.",
-            "What if you never got $3 ?",
-            "What would getting $3 mean to you ?",
-            "What does wanting $3 have to do with this discussion ?"
+            "What would it mean to you if you got $2?",
+            "Why do you want $2?",
+            "Suppose you got $2 soon.",
+            "What if you never got $2?",
+            "What would getting $2 mean to you?",
+            "What does wanting $2 have to do with this discussion?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i am (.*) @sad (.*)" ,
+					"decomposition_rule" : "(.*)i am(.* @sad)" ,
           "reassembly_rules" : [
-            "I am sorry to hear that you are $3.",
-            "Do you think coming here will help you not to be $3 ?",
-            "I'm sure it's not pleasant to be $3.",
-            "Can you explain what made you $3 ?"
+            "I am sorry to hear that you are $2.",
+            "Do you think coming here will help you not to be $2?",
+            "I'm sure it's not pleasant to be $2.",
+            "Can you explain what made you $2?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i am (.*) @happy (.*)" ,
+					"decomposition_rule" : "(.*)i am(.* @happy)" ,
           "reassembly_rules" : [
-            "How have I helped you to be $3 ?",
-            "Has your treatment made you $3 ?",
-            "What makes you $3 just now ?",
-            "Can you explain why you are suddenly $3 ?"
+            "How have I helped you to be $2?",
+            "Has your treatment made you $2?",
+            "What makes you $2 just now?",
+            "Can you explain why you are suddenly $2?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i was (.*)" ,
+					"decomposition_rule" : "(.*)i was(.+)" ,
           "reassembly_rules" : [
             "GOTO was"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i @belief i (.*)" ,
+					"decomposition_rule" : "(.*)i @belief i(.+)" ,
           "reassembly_rules" : [
-            "Do you really think so ?",
-            "But you are not sure you $3.",
-            "Do you really doubt you $3 ?"
+            "But you are not sure you $2.",
+            "Do you really think so?",
+            "Do you really doubt you $2?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i (.*) @belief (.*) you (.*)" ,
+					"decomposition_rule" : "(.*)i(.* @belief)(.*)you(.+)" ,
           "reassembly_rules" : [
               "GOTO you"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i am (.*)" ,
+					"decomposition_rule" : "(.*)i am(.+)" ,
           "reassembly_rules" : [
-            "Is it because you are $2 that you came to me ?",
-            "How long have you been $2 ?",
-            "Do you believe it is normal to be $2 ?",
-            "Do you enjoy being $2 ?",
-            "Do you know anyone else who is $2 ?"
+            "Is it because you are $2 that you came to me?",
+            "How long have you been $2?",
+            "Do you believe it is normal to be $2?",
+            "Do you enjoy being $2?",
+            "Do you know anyone else who is $2?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i @cannot (.*)" ,
+					"decomposition_rule" : "(.*)i @cannot(.+)" ,
           "reassembly_rules" : [
-            "How do you know that you can't $3 ?",
-            "Have you tried ?",
-            "Perhaps you could $3 now.",
-            "Do you really want to be able to $3 ?",
-            "What if you could $3 ?"
+            "How do you know that you can't $2?",
+            "Have you tried?",
+            "Perhaps you could $2 now.",
+            "Do you really want to be able to $2?",
+            "What if you could $2?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i don't (.*)" ,
+					"decomposition_rule" : "(.*)i dont(.+)" ,
           "reassembly_rules" : [
-            "Don't you really $2 ?",
-            "Why don't you $2 ?",
-            "Do you wish to be able to $2 ?",
-            "Does that trouble you ?"
+            "Don't you really $2?",
+            "Why don't you $2?",
+            "Do you wish to be able to $2?",
+            "Does that trouble you?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i feel (.*)" ,
+					"decomposition_rule" : "(.*)i feel(.+)" ,
           "reassembly_rules" : [
             "Tell me more about such feelings.",
-            "Do you often feel $2 ?",
-            "Do you enjoy feeling $2 ?",
-            "Of what does feeling $2 remind you ?"
+            "Do you often feel $2?",
+            "Do you enjoy feeling $2?",
+            "Of what does feeling $2 remind you?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) i (.*) you (.*)"  ,
+					"decomposition_rule" : "(.*)i(.*)you(.+)"  ,
           "reassembly_rules" : [
             "Perhaps in your fantasies we $2 each other.",
-            "Do you wish to $2 me ?",
+            "Do you wish to $2 me?",
             "You seem to need to $2 me.",
-            "Do you $2 anyone else ?"
+            "Do you $2 anyone else?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)"  ,
+					"decomposition_rule" : "(.+)"  ,
           "reassembly_rules" : [
-            "You say $1 ?",
-            "Can you elaborate on that ?",
-            "Do you say $1 for some special reason ?",
+            "You say $1?",
+            "Can you elaborate on that?",
+            "Do you say $1 for some special reason?",
             "That's quite interesting."
           ]
         }
@@ -525,29 +516,29 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) you remind me of (.*)" ,
+					"decomposition_rule" : "(.*)you remind me of(.+)" ,
           "reassembly_rules" : [
             "GOTO alike"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) you are (.*)" ,
+					"decomposition_rule" : "(.*)you are(.+)" ,
           "reassembly_rules" : [
-            "What makes you think I am $2 ?",
-            "Does it please you to believe I am $2 ?",
-            "Do you sometimes wish you were $2 ?",
+            "What makes you think I am $2?",
+            "Does it please you to believe I am $2?",
+            "Do you sometimes wish you were $2?",
             "Perhaps you would like to be $2."
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) you (.*)" ,
+					"decomposition_rule" : "(.*)you(.+)" ,
           "reassembly_rules" : [
             "We were discussing you -- not me.",
-            "Oh, I $2 ?",
-            "You're not really talking about me -- are you ?",
-            "What are your feelings now ?"
+            "Oh, I $2?",
+            "You're not really talking about me -- are you?",
+            "What are your feelings now?"
           ]
         }
       ]
@@ -558,7 +549,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
             "You seem to be quite positive.",
             "You are sure.",
@@ -574,25 +565,25 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) no one (.*)" ,
+					"decomposition_rule" : "(.*)no one(.+)" ,
           "reassembly_rules" : [
-            "Are you sure, no one $2 ?",
+            "Are you sure, no one $2?",
             "Surely someone $2 .",
-            "Can you think of anyone at all ?",
-            "Are you thinking of a very special person ?",
-            "Who, may I ask ?",
-            "You have a particular person in mind, don't you ?",
-            "Who do you think you are talking about ?"
+            "Can you think of anyone at all?",
+            "Are you thinking of a very special person?",
+            "Who, may I ask?",
+            "You have a particular person in mind, don't you?",
+            "Who do you think you are talking about?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
             "Are you saying no just to be negative?",
             "You are being a bit negative.",
-            "Why not ?",
-            "Why 'no' ?"
+            "Why not?",
+            "Why 'no'?"
           ]
         }
       ]
@@ -603,9 +594,9 @@
       "rules" : [
         {
           "memorise" : true,
-					"decomposition_rule" : "(.*)my(.*)" ,
+					"decomposition_rule" : "(.*)my(.+)" ,
           "reassembly_rules" : [
-            "Does that have anything to do with the fact that your $2 ?",
+            "Does that have anything to do with the fact that your $2?",
             "Lets discuss further why your $2 .",
             "Earlier you said your $2 .",
             "But your $2 ."
@@ -613,22 +604,22 @@
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)my(.*)@family(.*)" ,
+					"decomposition_rule" : "(.*)my(.* @family) (.+)" ,
           "reassembly_rules" : [
             "Tell me more about your family.",
-            "Who else in your family $4 ?",
-            "Your $3 ?",
-            "What else comes to your mind when you think of your $3 ?"
+            "Who else in your family $3?",
+            "Your $2?",
+            "What else comes to your mind when you think of your $2?"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)my(.*)" ,
+					"decomposition_rule" : "(.*)my(.+)" ,
           "reassembly_rules" : [
-            "Your $2 ?",
-            "Why do you say your $2 ?",
-            "Does that suggest anything else which belongs to you ?",
-            "Is it important to you that your $2 ?"
+            "Your $2?",
+            "Why do you say your $2?",
+            "Does that suggest anything else which belongs to you?",
+            "Is it important to you that your $2?"
           ]
         }
       ]
@@ -639,9 +630,9 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) can you (.*)" ,
+					"decomposition_rule" : "(.*)can you(.+)" ,
           "reassembly_rules" : [
-            "You believe I can $2 don't you ?",
+            "You believe I can $2 don't you?",
             "GOTO what",
             "You want me to be able to $2.",
             "Perhaps you would like to be able to $2 yourself."
@@ -649,10 +640,10 @@
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) can i (.*)" ,
+					"decomposition_rule" : "(.*)can i(.+)" ,
           "reassembly_rules" : [
             "Whether or not you can $2 depends on you more than on me.",
-            "Do you want to be able to $2 ?",
+            "Do you want to be able to $2?",
             "Perhaps you don't want to $2.",
             "GOTO what"
           ]
@@ -665,17 +656,17 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
-            "Why do you ask ?",
-            "Does that question interest you ?",
-            "What is it you really want to know ?",
-            "Are such questions much on your mind ?",
-            "What answer would please you most ?",
-            "What do you think ?",
-            "What comes to mind when you ask that ?",
-            "Have you asked such questions before ?",
-            "Have you asked anyone else ?"
+            "Why do you ask?",
+            "Does that question interest you?",
+            "What is it you really want to know?",
+            "Are such questions much on your mind?",
+            "What answer would please you most?",
+            "What do you think?",
+            "What comes to mind when you ask that?",
+            "Have you asked such questions before?",
+            "Have you asked anyone else?"
           ]
         }
       ]
@@ -686,7 +677,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
             "GOTO what"
           ]
@@ -699,7 +690,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
             "GOTO what"
           ]
@@ -712,7 +703,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
             "GOTO what"
           ]
@@ -725,7 +716,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
             "GOTO what"
           ]
@@ -738,12 +729,12 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
-            "Is that the real reason ?",
-            "Don't any other reasons come to mind ?",
-            "Does that reason seem to explain anything else ?",
-            "What other reasons might there be ?"
+            "Is that the real reason?",
+            "Don't any other reasons come to mind?",
+            "Does that reason seem to explain anything else?",
+            "What other reasons might there be?"
           ]
         }
       ]
@@ -754,29 +745,29 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) why don't you (.*)",
+					"decomposition_rule" : "(.*)why dont you(.+)",
           "reassembly_rules" : [
-            "Do you believe I don't $2 ?",
+            "Do you believe I don't $2?",
             "Perhaps I will $2 in good time.",
-            "Should you $2 yourself ?",
-            "You want me to $2 ?",
+            "Should you $2 yourself?",
+            "You want me to $2?",
             "GOTO what"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) why can't i (.*)",
+					"decomposition_rule" : "(.*)why can't i(.+)",
           "reassembly_rules" : [
-            "Do you think you should be able to $2 ?",
-            "Do you want to be able to $2 ?",
-            "Do you believe this will help you to $2 ?",
-            "Have you any idea why you can't $2 ?",
+            "Do you think you should be able to $2?",
+            "Do you want to be able to $2?",
+            "Do you believe this will help you to $2?",
+            "Have you any idea why you can't $2?",
             "GOTO what"
           ]
         },
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)",
+					"decomposition_rule" : "(.+)",
           "reassembly_rules" : [
             "GOTO what"
           ]
@@ -789,56 +780,16 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) @everyone (.*)",
+					"decomposition_rule" : "(.*)(@everyone .+)",
           "reassembly_rules" : [
-            "Really, $2 ?",
-            "Surely not $2.",
-            "Can you think of anyone in particular ?",
+            "Really, $2?",
+            "Can you think of anyone in particular?",
             "Who, for example?",
-            "Are you thinking of a very special person ?",
-            "Who, may I ask ?",
-            "Someone special perhaps ?",
-            "You have a particular person in mind, don't you ?",
-            "Who do you think you're talking about ?"
-          ]
-        }
-      ]
-    },
-    {
-      "key" : "everybody",
-			"rank" : 2,
-      "rules" : [
-        {
-          "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
-          "reassembly_rules" : [
-            "GOTO everyone"
-          ]
-        }
-      ]
-    },
-    {
-      "key" : "nobody",
-			"rank" : 2,
-      "rules" : [
-        {
-          "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
-          "reassembly_rules" : [
-            "GOTO everyone"
-          ]
-        }
-      ]
-    },
-    {
-      "key" : "noone",
-			"rank" : 2,
-      "rules" : [
-        {
-          "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
-          "reassembly_rules" : [
-            "GOTO everyone"
+            "Are you thinking of a very special person?",
+            "Who, may I ask?",
+            "Someone special perhaps?",
+            "You have a particular person in mind, don't you?",
+            "Who do you think you're talking about?"
           ]
         }
       ]
@@ -849,12 +800,12 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
-            "Can you think of a specific example ?",
-            "When ?",
-            "What incident are you thinking of ?",
-            "Really, always ?"
+            "Can you think of a specific example?",
+            "When?",
+            "What incident are you thinking of?",
+            "Really, always?"
           ]
         }
       ]
@@ -865,16 +816,16 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
-            "In what way ?",
-            "What resemblence do you see ?",
-            "What does that similarity suggest to you ?",
-            "What other connections do you see ?",
-            "What do you suppose that resemblence means ?",
-            "What is the connection, do you suppose ?",
-            "Could there really be some connection ?",
-            "How ?"
+            "In what way?",
+            "What resemblence do you see?",
+            "What does that similarity suggest to you?",
+            "What other connections do you see?",
+            "What do you suppose that resemblence means?",
+            "What is the connection, do you suppose?",
+            "Could there really be some connection?",
+            "How?"
           ]
         }
       ]
@@ -885,7 +836,7 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*) @be (.*) like (.*)" ,
+					"decomposition_rule" : "(.* @be) (.*)like(.+)" ,
           "reassembly_rules" : [
             "GOTO alike"
           ]
@@ -898,15 +849,15 @@
       "rules" : [
         {
           "memorise" : false,
-					"decomposition_rule" : "(.*)" ,
+					"decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
-            "How is it different ?",
-            "What differences do you see ?",
-            "What does that difference suggest to you ?",
-            "What other distinctions do you see ?",
-            "What do you suppose that disparity means ?",
-            "Could there be some connection, do you suppose ?",
-            "How ?"
+            "How is it different?",
+            "What differences do you see?",
+            "What does that difference suggest to you?",
+            "What other distinctions do you see?",
+            "What do you suppose that disparity means?",
+            "Could there be some connection, do you suppose?",
+            "How?"
           ]
         }
       ]

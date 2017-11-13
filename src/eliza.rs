@@ -5,17 +5,7 @@ use std::error::Error;
 use std::collections::{VecDeque, HashMap};
 use regex::{Regex, Captures};
 
-//use script_loader::ScriptLoader;
 use script::{Script, Keyword, Reflection, Synonym, Transform};
-
-// use script_loader::ScriptLoader;
-// use reflections::{Reflections, Reflection};
-// use keywords::{Keywords, Keyword};
-// use greetings::Greetings;
-// use farewells::Farewells;
-// use fallbacks::Fallbacks;
-// use synonyms::{Synonyms, Synonym};
-// use transforms::{Transforms, Transform};
 
 pub struct Eliza {
     script : Script,

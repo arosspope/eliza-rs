@@ -1,37 +1,29 @@
 #[macro_use] extern crate serde_derive;
 extern crate regex;
 
-use std::io;
-use std::io::Write;
-
 mod eliza;
-// mod keywords;
-// mod farewells;
-// mod greetings;
-// mod fallbacks;
-// mod reflections;
-// mod synonyms;
-// mod transforms;
-//mod script_loader;
 mod alphabet;
 mod script;
 
+use std::{env, io, process};
+use std::io::Write;
 use eliza::Eliza;
 
 fn main() {
     //TODO: unit tests
     //TODO: boxed results vs. eprintln
 
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 2 {
+        eprintln!("Usage: `./eliza [SCRIPT]`");
+        process::exit(1);
+    }
+
     println!("ELIZA begin");
-    //eliza init -> loads eliza script (could use cmdline arg for script location)
+    let mut eliza = Eliza::new(&args[1]).expect("Eliza failed to load");
+    println!("Enter '/quit' to leave the session.\n");
 
-    let mut eliza = Eliza::new("scripts/rogerian_psychiatrist.json").expect("Eliza failed to load");
-    println!();
-    println!("Enter '/quit' to leave the session.");
-
-    println!();
-    println!("{}", eliza.greet()); //eliza greets the user
-
+    println!("{}\n", eliza.greet()); //eliza greets the user
     loop {
         print!("> ");
         io::stdout().flush().expect("  Failed to read line.");
@@ -42,11 +34,9 @@ fn main() {
         match input.as_ref() {
             "/quit\n" => break,
             //Based on the rules in the script, eliza responds to the given input
-            _ => println!("{}", eliza.respond(&input)),
+            _ => println!("{}\n", eliza.respond(&input)),
         }
     }
 
-    //eliza farewells the user
-    println!();
-    println!("{}", eliza.farewell());
+    println!("\n{}", eliza.farewell()); //eliza farewells the user
 }
