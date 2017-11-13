@@ -1,0 +1,27 @@
+{
+  "greetings" : [
+    "How do you do. Please tell me your problems.",
+    "Please tell me what's been bothering you.",
+    "Is something troubling you?"
+  ],
+  "farewells" : [
+    "Goodbye.  It was nice talking to you.",
+    "Goodbye.  This was really a nice talk.",
+    "Goodbye.  I'm looking forward to our next session.",
+    "This was a good session, wasn't it -- but time is over now.   Goodbye.",
+    "Maybe we could discuss this moreover in our next session?   Goodbye."
+  ],
+  "fallbacks" : [
+    "I'm not sure I understand you fully.",
+    "Please go on.",
+    "What does that suggest to you?",
+    "Do you feel strongly about discussing such things?",
+    "That is interesting.  Please continue.",
+    "Tell me more about that.",
+    "Does talking about this bother you?"
+  ],
+  "transforms" : [],
+  "synonyms" : [],
+  "reflections" : [],
+  "keywords" : []
+}
