@@ -2,6 +2,14 @@
 name = "eliza"
 version = "0.1.0"
 authors = ["arosspope <andrew.pope456@gmail.com>"]
+license = "MIT/Apache-2.0"
+homepage = "https://github.com/arosspope/eliza-rs.git"
+repository = "https://github.com/arosspope/eliza-rs.git"
+description = "ELIZA is a computer program that emulates a Rogerian psychotherapist."
+keywords = ["eliza", "nlp", "weizenbaum", "linguistics"]
+categories = ["algorithms", "parsing", "text-processing"]
+readme = "README.md"
+include = ["src/**/*", "Cargo.toml", "scripts/*"]
 
 [dependencies]
 regex = "0.2"
