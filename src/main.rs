@@ -5,15 +5,16 @@ use std::io;
 use std::io::Write;
 
 mod eliza;
-mod keywords;
-mod farewells;
-mod greetings;
-mod fallbacks;
-mod reflections;
-mod synonyms;
-mod transforms;
-mod script_loader;
+// mod keywords;
+// mod farewells;
+// mod greetings;
+// mod fallbacks;
+// mod reflections;
+// mod synonyms;
+// mod transforms;
+//mod script_loader;
 mod alphabet;
+mod script;
 
 use eliza::Eliza;
 
@@ -28,7 +29,7 @@ fn main() {
     println!("ELIZA begin");
     //eliza init -> loads eliza script (could use cmdline arg for script location)
 
-    let mut eliza = Eliza::new("scripts/rogerian_psychiatrist").expect("Eliza failed to load");
+    let mut eliza = Eliza::new("scripts/rogerian_psychiatrist.json").expect("Eliza failed to load");
     println!();
     println!("Enter '/quit' to leave the session.");
 

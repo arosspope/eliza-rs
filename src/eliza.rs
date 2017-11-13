@@ -3,33 +3,23 @@ use alphabet::Alphabet;
 
 use std::error::Error;
 use std::collections::{VecDeque, HashMap};
-use std::borrow::BorrowMut;
 use regex::{Regex, Captures};
 
-use script_loader::ScriptLoader;
-use reflections::{Reflections, Reflection};
-use keywords::{Keywords, Keyword};
-use greetings::Greetings;
-use farewells::Farewells;
-use fallbacks::Fallbacks;
-use synonyms::{Synonyms, Synonym};
-use transforms::Transforms;
+//use script_loader::ScriptLoader;
+use script::{Script, Keyword, Reflection, Synonym, Transform};
 
-#[derive(Debug, Clone)]
-struct PhraseWords {
-    phrase : String,      //A phrase
-    words : Vec<String>,  //The words that make up the phrase
-}
+// use script_loader::ScriptLoader;
+// use reflections::{Reflections, Reflection};
+// use keywords::{Keywords, Keyword};
+// use greetings::Greetings;
+// use farewells::Farewells;
+// use fallbacks::Fallbacks;
+// use synonyms::{Synonyms, Synonym};
+// use transforms::{Transforms, Transform};
 
 pub struct Eliza {
-    greetings : Greetings,          //A collection of greetings to say 'hello'
-    farewells : Farewells,          //A collection of farewells to say 'goodbye'
-    fallbacks : Fallbacks,          //A collection of fallback phrases to use, when eliza doesnt know what to do
-    kwords : Keywords,              //A collection of keywords and associated decomposition rules
-    transforms : Transforms,        //TODO: Things to transform in post processing?
-    synonyms : Synonyms,            //TODO: Common synonyms
-    reflections : Reflections,      //TODO: Applied before checking composition rules?
-    memory : VecDeque<String>,      //TODO: A collection of things the user has said in previous conversation
+    script : Script,
+    memory : VecDeque<String>,
     rule_usage : HashMap<String, usize>,
 }
 
@@ -37,33 +27,9 @@ impl Eliza {
     pub fn new(script_location: &str) -> Result<Eliza, Box<Error>> {
         //TODO: Perhaps these prints would be better as debug output
         let e = Eliza {
-            greetings: {
-                println!("  Loading greetings...");
-                Greetings::load(script_location)?
-            },
-            farewells: {
-                println!("  Loading farewells...");
-                Farewells::load(script_location)?
-            },
-            fallbacks: {
-                println!("  Loading fallbacks...");
-                Fallbacks::load(script_location)?
-            },
-            kwords: {
-                println!("  Loading keywords...");
-                Keywords::load(script_location)?
-            },
-            transforms: {
-                println!("  Loading transforms...");
-                Transforms::load(script_location)?
-            },
-            synonyms: {
-                println!("  Loading synonyms...");
-                Synonyms::load(script_location)?
-            },
-            reflections: {
-                println!("  Loading reflections...");
-                Reflections::load(script_location)?
+            script: {
+                println!("  Loading script...");
+                Script::load(script_location)?
             },
             memory: VecDeque::new(),
             rule_usage: HashMap::new(),
@@ -73,31 +39,24 @@ impl Eliza {
     }
 
     pub fn greet(&self) -> String {
-        match self.greetings.random(){
+        match self.script.rand_greet(){
             Some(greet) => greet.to_string(),
             None => String::from("Hello, I am Eliza."), //If greetings are empty, have default
         }
     }
 
     pub fn farewell(&self) -> String {
-        match self.farewells.random(){
+        match self.script.rand_farewell(){
             Some(farwell) => farwell.to_string(),
             None => String::from("Goodbye."), //If farewells are empty, have default
-        }
-    }
-
-    fn fallback(&self) -> String {
-        match self.fallbacks.random(){
-            Some(fallback) => fallback.to_string(),
-            None => String::from("Go on."), //A fallback for the fallback - har har
         }
     }
 
     pub fn respond(&mut self, input: &str) -> String {
         //Convert the input to lowercase and replace certain words before splitting up the input
         //into phrases and their word parts
-        let phrases = get_phrases(&self.transform_input(&input.to_lowercase()));
-        let (active_phrase, mut keystack) = self.populate_keystack(phrases);
+        let phrases = get_phrases(&transform(&input.to_lowercase(), &self.script.transforms));
+        let (active_phrase, mut keystack) = populate_keystack(phrases, &self.script.keywords);
 
         let mut response: Option<String> = None;
 
@@ -115,6 +74,13 @@ impl Eliza {
         }
     }
 
+    fn fallback(&self) -> String {
+        match self.script.rand_fallback() {
+            Some(fallback) => fallback.to_string(),
+            None => String::from("Go on."), //A fallback for the fallback - har har
+        }
+    }
+
     fn get_response(&mut self, phrase: &str, keystack: &mut VecDeque<Keyword>) -> Option<String> {
         let mut response: Option<String> = None;
 
@@ -125,7 +91,7 @@ impl Eliza {
             //For each rule set, attempt to decompose phrase then reassemble a response
             'decompostion: for r in next.rules {
                 //Get all regex permutations of the decomposition rule (dependent upon synonyms)
-                let regexes = permutations(&r.decomposition_rule, &self.synonyms.synonyms);
+                let regexes = permutations(&r.decomposition_rule, &self.script.synonyms);
                 for re in regexes {
                     if let Some(cap) = re.captures(phrase)
                     {
@@ -135,7 +101,7 @@ impl Eliza {
                             if let Some(goto) = is_goto(&assem) {
                                 //The best rule was a goto, push associated key entry to stack
                                 if let Some(entry) =
-                                    self.kwords.keywords.iter().find(|ref a| a.key == goto)
+                                    self.script.keywords.iter().find(|ref a| a.key == goto)
                                 {
                                     //Push to front of keystack and skip to it
                                     keystack.push_front(entry.clone());
@@ -146,8 +112,8 @@ impl Eliza {
                                 }
                             }
 
-                            //Attempt to reconstruct given the capture groups
-                            response = reconstruct(&assem, &cap, &self.reflections.reflections);
+                            //Attempt to assemble given the capture groups
+                            response = assemble(&assem, &cap, &self.script.reflections);
                             if response.is_some(){
                                 if r.memorise {
                                     //We'll save this response for later...
@@ -206,45 +172,46 @@ impl Eliza {
 
         best_rule
     }
+}
 
-    fn transform_input(&self, input: &str) -> String {
-        let mut transformed = String::from(input);
-        for t in &self.transforms.transforms {
-            let replacement = &t.word;
-            for equivalent in &t.equivalents {
-                transformed = transformed.replace(equivalent, &replacement);
-            }
+fn transform(input: &str, transforms: &[Transform]) -> String {
+    let mut transformed = String::from(input);
+    for t in transforms {
+        let replacement = &t.word;
+        for equivalent in &t.equivalents {
+            transformed = transformed.replace(equivalent, &replacement);
         }
-
-        transformed
     }
 
-    fn populate_keystack(&self, phrases: Vec<String>) -> (Option<String>, VecDeque<Keyword>)
-    {
-        let mut keystack: Vec<Keyword> = Vec::new();
-        let mut active_phrase: Option<String> = None;
+    transformed
+}
 
-        for phrase in phrases {
-            if active_phrase.is_some() {
-                //A phrase with keywords was found, break as we don't care about other phrases
-                break;
-            }
+fn populate_keystack(phrases: Vec<String>, keywords: &[Keyword])
+    -> (Option<String>, VecDeque<Keyword>)
+{
+    let mut keystack: Vec<Keyword> = Vec::new();
+    let mut active_phrase: Option<String> = None;
 
-            let words = get_words(&phrase);
-
-            for word in words {
-                if let Some(k) = self.kwords.keywords.iter().find(|ref k| k.key == word){
-                    keystack.push(k.clone());
-                    active_phrase = Some(phrase.clone());
-                }
-            }
+    for phrase in phrases {
+        if active_phrase.is_some() {
+            //A phrase with keywords was found, break as we don't care about other phrases
+            break;
         }
 
-        //sort the keystack with highest rank first
-        keystack.sort_by(|a,b| b.rank.cmp(&a.rank));
+        let words = get_words(&phrase);
 
-        (active_phrase, VecDeque::from(keystack))
+        for word in words {
+            if let Some(k) = keywords.iter().find(|ref k| k.key == word){
+                keystack.push(k.clone());
+                active_phrase = Some(phrase.clone());
+            }
+        }
     }
+
+    //sort the keystack with highest rank first
+    keystack.sort_by(|a,b| b.rank.cmp(&a.rank));
+
+    (active_phrase, VecDeque::from(keystack))
 }
 
 fn permutations(decomposition: &str, synonyms: &[Synonym]) -> Vec<Regex> {
@@ -285,7 +252,7 @@ fn permutations(decomposition: &str, synonyms: &[Synonym]) -> Vec<Regex> {
     re_perms
 }
 
-fn reconstruct(rule: &str, captures: &Captures, reflections: &[Reflection]) -> Option<String>
+fn assemble(rule: &str, captures: &Captures, reflections: &[Reflection]) -> Option<String>
 {
     //TODO: Better way using regex replace all?
     //TODO: Must include note about being whitespace before '?'
@@ -355,7 +322,7 @@ fn reflect(input: &str, reflections: &[Reflection]) -> String {
 }
 
 fn get_phrases(input: &str) -> Vec<String> {
-    input.split(|c| c == '.' || c == ',' || c == '?').map(|s| s.to_string()).collect()
+    input.split(|c| c == '.' || c == ',' || c == '?').map(|s| s.trim().to_string()).collect()
 }
 
 fn get_words(phrase: &str) -> Vec<String> {
@@ -373,26 +340,12 @@ fn is_goto(statement: &str) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    //TODO: Decouple tests from input json files
+    use keywords::Rule;
 
     #[test]
     fn loading_eliza_okay() {
+        //TODO: Decouple tests from input json files
         assert!(Eliza::new("scripts/rogerian_psychiatrist").is_ok());
-    }
-
-    #[test]
-    fn regex_test(){
-        let re = Regex::new(r"(?P<y>\d{4})-(?P<m>\d{2})-(?P<d>\d{2})").unwrap();
-        let before = "2012-03-14, 2013-01-01 and 2014-07-05";
-        let after = re.replace_all(before, "$m/$d/$y");
-        assert_eq!(after, "03/14/2012, 01/01/2013 and 07/05/2014");
-
-
-        let re = Regex::new(r"(.*) you are (.*)").unwrap();
-        let phrase = "I think";
-        let cap = re.captures(phrase);
-        assert!(cap.is_none());
     }
 
     #[test]
@@ -431,7 +384,7 @@ mod tests {
     }
 
     #[test]
-    fn recon_rule_equal(){
+    fn assemble_rule_equal(){
         let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
 
         //Create a fake rule usage HashMap
@@ -448,7 +401,7 @@ mod tests {
     }
 
     #[test]
-    fn recon_rule_smaller(){
+    fn assemble_rule_smaller(){
         let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
 
         //Create a fake rule usage HashMap
@@ -465,7 +418,7 @@ mod tests {
     }
 
     #[test]
-    fn recon_rule_unknown(){
+    fn assemble_rule_unknown(){
         let mut e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
 
         //Create a fake rule usage HashMap
@@ -481,52 +434,114 @@ mod tests {
     }
 
     #[test]
-    fn recon_ok(){
+    fn assemble_ok(){
         let reflections: Vec<Reflection> = Vec::new();
         let re = Regex::new(r"(.*) you are (.*)").unwrap();
         let phrase = "I think that you are so stupid";
         let cap = re.captures(phrase).unwrap();
 
-        let res = reconstruct("What makes you think I am $2 ?", &cap, &reflections);
+        let res = assemble("What makes you think I am $2 ?", &cap, &reflections);
         assert_eq!(res.unwrap(), "What makes you think I am so stupid ?");
     }
 
     #[test]
-    fn recon_invalid_index(){
+    fn assemble_invalid_index(){
         let reflections: Vec<Reflection> = Vec::new();
         let re = Regex::new(r"(.*) you are (.*)").unwrap();
         let phrase = "I think that you are so stupid";
         let cap = re.captures(phrase).unwrap();
 
-        let res = reconstruct("What makes you think I am $5 ?", &cap, &reflections);
+        let res = assemble("What makes you think I am $5 ?", &cap, &reflections);
         assert!(res.is_none());
     }
 
     #[test]
-    fn recon_invalid_id(){
+    fn assemble_invalid_id(){
         let reflections: Vec<Reflection> = Vec::new();
         let re = Regex::new(r"(.*) you are (.*)").unwrap();
         let phrase = "I think that you are so stupid";
         let cap = re.captures(phrase).unwrap();
 
-        let res = reconstruct("What makes you think I am $a ?", &cap, &reflections);
+        let res = assemble("What makes you think I am $a ?", &cap, &reflections);
         assert!(res.is_none());
     }
 
-    //TODO: Move transform outside of ELIZA for testing
     #[test]
-    fn transform(){
-        let e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
+    fn transform_phrases(){
+        let transforms = vec!(
+            Transform {word: String::from("computer"), equivalents: vec!(String::from("machine"), String::from("computers"))},
+            Transform {word: String::from("remember"), equivalents: vec!(String::from("recollect"))}
+        );
 
-        let t1 = "computers will one day be the superior machine.";
-        let t2 = "you're not wrong there.";
-        let t3 = "In some ways, you are identical to my father.";
-        let t4 = "I can't recollect.";
+        assert_eq!("computer will one day be the superior computer.",
+            transform("computers will one day be the superior machine.", &transforms));
 
-        assert_eq!("computer will one day be the superior computer.", e.transform_input(t1));
-        assert_eq!("you are not wrong there.", e.transform_input(t2));
-        assert_eq!("In some ways, you are alike to my father.", e.transform_input(t3));
-        assert_eq!("I cant remember.", e.transform_input(t4));
+        assert_eq!("I cant remember.",
+            transform("I cant recollect.", &transforms));
+    }
+
+    #[test]
+    fn keystack_simple(){
+        let keywords: Vec<Keyword> = vec!(
+            Keyword { key: String::from("hello"), rank: 0, rules: vec!(
+                Rule {memorise: false, decomposition_rule: String::new(), reassembly_rules: Vec::new()})},
+            Keyword { key: String::from("how"), rank: 0, rules: vec!(
+                Rule {memorise: false, decomposition_rule: String::new(), reassembly_rules: Vec::new()})},
+            Keyword { key: String::from("i"), rank: 0, rules: vec!(
+                Rule {memorise: false, decomposition_rule: String::new(), reassembly_rules: Vec::new()})},
+        );
+
+        let phrases = get_phrases("hello how are you? i was feeling good today, but now i'm not.");
+        let (phrase, keystack) = populate_keystack(phrases, &keywords);
+
+        assert_eq!("hello how are you", phrase.unwrap());
+        assert_eq!(2, keystack.len());
+        assert_eq!("hello", keystack[0].key);
+        assert_eq!("how", keystack[1].key);
+    }
+
+    #[test]
+    fn keystack_phrase_select() {
+        let keywords: Vec<Keyword> = vec!(
+            Keyword { key: String::from("was"), rank: 0, rules: vec!(
+                Rule {memorise: false, decomposition_rule: String::new(), reassembly_rules: Vec::new()})},
+            Keyword { key: String::from("how"), rank: 0, rules: vec!(
+                Rule {memorise: false, decomposition_rule: String::new(), reassembly_rules: Vec::new()})},
+            Keyword { key: String::from("i"), rank: 0, rules: vec!(
+                Rule {memorise: false, decomposition_rule: String::new(), reassembly_rules: Vec::new()})},
+        );
+
+        let phrases = get_phrases("spagetti meatballs? i was feeling good today, but now...");
+        let (phrase, keystack) = populate_keystack(phrases, &keywords);
+
+        assert_eq!("i was feeling good today", phrase.unwrap());
+        assert_eq!(2, keystack.len());
+        assert_eq!("i", keystack[0].key);
+        assert_eq!("was", keystack[1].key);
+    }
+
+    #[test]
+    fn keystack_rank_order() {
+        let keywords: Vec<Keyword> = vec!(
+            Keyword { key: String::from("i"), rank: 1, rules: vec!(
+                Rule {memorise: false, decomposition_rule: String::new(), reassembly_rules: Vec::new()})},
+            Keyword { key: String::from("my"), rank: 2, rules: vec!(
+                Rule {memorise: false, decomposition_rule: String::new(), reassembly_rules: Vec::new()})},
+            Keyword { key: String::from("are"), rank: 0, rules: vec!(
+                Rule {memorise: false, decomposition_rule: String::new(), reassembly_rules: Vec::new()})},
+            Keyword { key: String::from("alike"), rank: 3, rules: vec!(
+                Rule {memorise: false, decomposition_rule: String::new(), reassembly_rules: Vec::new()})},
+        );
+
+        let phrases = get_phrases("i love my dog - people think we are alike");
+        let (phrase, keystack) = populate_keystack(phrases, &keywords);
+
+        assert_eq!("i love my dog - people think we are alike", phrase.unwrap());
+        assert_eq!(4, keystack.len());
+        assert_eq!("alike", keystack[0].key);
+        assert_eq!("my", keystack[1].key);
+        assert_eq!("i", keystack[2].key);
+        assert_eq!("are", keystack[3].key);
     }
 
     #[test]
@@ -535,8 +550,8 @@ mod tests {
 
         //check phrases are correct
         assert_eq!("Hello how are you", phrases[0]);
-        assert_eq!(" you look good", phrases[1]);
-        assert_eq!(" Let    me know what you think", phrases[2]);
+        assert_eq!("you look good", phrases[1]);
+        assert_eq!("Let    me know what you think", phrases[2]);
         assert_eq!("of me", phrases[3]);
     }
 
@@ -544,40 +559,5 @@ mod tests {
     fn word_splitting(){
         let words = get_words("Hello how are you");
         assert_eq!(vec!("Hello", "how", "are", "you"), words);
-    }
-
-    //TODO: Move keystack outside of scope of eliza for testing
-    #[test]
-    fn keystack_building(){
-        let e = Eliza::new("scripts/rogerian_psychiatrist").unwrap();
-
-        let phrases = get_phrases("hello how are you? i was feeling good today, but now i'm not.");
-        let (phrase, keystack) = e.populate_keystack(phrases);
-
-        assert_eq!("hello how are you", phrase.unwrap());
-        assert_eq!(4, keystack.len());
-        assert_eq!("hello", keystack[0].key);
-        assert_eq!("how", keystack[1].key);
-        assert_eq!("are", keystack[2].key);
-        assert_eq!("you", keystack[3].key);
-
-        let phrases = get_phrases("spagetti meatballs? i was feeling good today, but now...");
-        let (phrase, keystack) = e.populate_keystack(phrases);
-
-        assert_eq!(" i was feeling good today", phrase.unwrap());
-        assert_eq!(2, keystack.len());
-        assert_eq!("was", keystack[0].key);
-        assert_eq!("i", keystack[1].key);
-
-        //check rank ordering
-        let phrases = get_phrases("i love my dog - people think we are alike");
-        let (phrase, keystack) = e.populate_keystack(phrases);
-
-        assert_eq!("i love my dog - people think we are alike", phrase.unwrap());
-        assert_eq!(4, keystack.len());
-        assert_eq!("alike", keystack[0].key);
-        assert_eq!("my", keystack[1].key);
-        assert_eq!("i", keystack[2].key);
-        assert_eq!("are", keystack[3].key);
     }
 }
