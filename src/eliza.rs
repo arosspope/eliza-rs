@@ -217,6 +217,9 @@ fn permutations(decomposition: &str, synonyms: &[Synonym]) -> Vec<Regex> {
     //If no '@' symbol then just add to permutations
     if decomposition.matches('@').count() == 0 {
         permutations.push(decomposition.to_string());
+    } else {
+        //remember to add the base word without the @
+        permutations.push(decomposition.replace('@', ""));
     }
 
     for w in &words {
@@ -345,8 +348,9 @@ mod tests {
         });
 
         let re_perms = permutations("(.*)my (.* @family)", &synonyms);
-        assert_eq!("(.*)my (.* brother)", re_perms[0].as_str());
-        assert_eq!("(.*)my (.* mother)", re_perms[1].as_str());
+        assert_eq!("(.*)my (.* family)", re_perms[0].as_str());
+        assert_eq!("(.*)my (.* brother)", re_perms[1].as_str());
+        assert_eq!("(.*)my (.* mother)", re_perms[2].as_str());
     }
 
     #[test]

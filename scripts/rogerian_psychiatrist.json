@@ -32,21 +32,20 @@
     { "word" : "computer", "equivalents" : ["machine", "machines", "computers"]},
     { "word" : "was", "equivalents" : ["were"]},
     { "word" : "you are", "equivalents" : ["you're", "youre"]},
-    { "word" : "i am", "equivalents" : ["i'm", "im"]
-    },
+    { "word" : "i am", "equivalents" : ["i'm", "im"]},
     { "word" : "alike", "equivalents" : ["same", "identical", "equivalent"]},
     { "word" : "sorry", "equivalents" : ["apologise"]},
     { "word" : "we would", "equivalents" : ["we'd"]}
   ],
   "synonyms" : [
-    { "word" : "be", "equivalents" : ["am", "is", "are", "was", "be"]},
-    { "word" : "belief", "equivalents" : ["feel", "think", "believe", "wish", "belief"]},
-    { "word" : "cannot", "equivalents" : ["can't", "cannot"]},
-    { "word" : "desire", "equivalents" : ["want", "need", "desire"]},
-    { "word" : "everyone", "equivalents" : ["everybody", "nobody", "noone", "everyone"]},
-    { "word" : "family", "equivalents" : ["mother", "mom", "father", "dad", "sister", "brother", "wife", "children", "child", "family"]},
-    { "word" : "happy", "equivalents" : ["elated", "glad", "better", "happy"]},
-    { "word" : "sad", "equivalents" : ["unhappy", "depressed", "sick", "sad"]}
+    { "word" : "be", "equivalents" : ["am", "is", "are", "was"]},
+    { "word" : "belief", "equivalents" : ["feel", "think", "believe", "wish"]},
+    { "word" : "cannot", "equivalents" : ["can't"]},
+    { "word" : "desire", "equivalents" : ["want", "need"]},
+    { "word" : "everyone", "equivalents" : ["everybody", "nobody", "noone"]},
+    { "word" : "family", "equivalents" : ["mother", "mom", "father", "dad", "sister", "brother", "wife", "children", "child"]},
+    { "word" : "happy", "equivalents" : ["elated", "glad", "better"]},
+    { "word" : "sad", "equivalents" : ["unhappy", "depressed", "sick"]}
   ],
   "reflections" : [
     { "word" : "am", "inverse" : "are", "twoway" : false},
