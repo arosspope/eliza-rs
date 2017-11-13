@@ -383,7 +383,7 @@ mod tests {
     }
 
     #[test]
-    fn decon_permutations(){
+    fn valid_permutations(){
         let synonyms: Vec<Synonym> = vec!(Synonym {
             word: "family".to_string(),
             equivalents: vec!("brother".to_string(), "mother".to_string())
@@ -392,6 +392,29 @@ mod tests {
         let re_perms = rule_permutations("(.*)my (.* @family)", &synonyms);
         assert_eq!("(.*)my (.* brother)", re_perms[0].as_str());
         assert_eq!("(.*)my (.* mother)", re_perms[1].as_str());
+    }
+
+    #[test]
+    fn invalid_permutation(){
+        let synonyms: Vec<Synonym> = vec!(Synonym {
+            word: "family".to_string(),
+            equivalents: vec!("brother".to_string(), "mother".to_string())
+        });
+
+        let re_perms = rule_permutations("(.*)my (.* @family @fail)", &synonyms);
+        assert!(re_perms.is_empty());
+    }
+
+    #[test]
+    fn simple_permutation(){
+        let synonyms: Vec<Synonym> = vec!(Synonym {
+            word: "family".to_string(),
+            equivalents: vec!("brother".to_string(), "mother".to_string())
+        });
+
+        let re_perms = rule_permutations("(.*)my (.* dog)", &synonyms);
+        assert_eq!(1, re_perms.len());
+        assert_eq!("(.*)my (.* dog)", re_perms[0].as_str());
     }
 
     #[test]

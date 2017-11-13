@@ -23,6 +23,8 @@ fn main() {
     //TODO: All print statements (expect elisa response) should go to info or warn or error
     //TODO: memorise keywords0
     //TODO: unit tests
+    //TODO: boxed results vs. eprintln
+
     println!("ELIZA begin");
     //eliza init -> loads eliza script (could use cmdline arg for script location)
 
