@@ -5,9 +5,9 @@ authors = ["arosspope <andrew.pope456@gmail.com>"]
 license = "MIT/Apache-2.0"
 homepage = "https://github.com/arosspope/eliza-rs.git"
 repository = "https://github.com/arosspope/eliza-rs.git"
-description = "ELIZA is a computer program that emulates a Rogerian psychotherapist."
-keywords = ["eliza", "nlp", "weizenbaum", "linguistics"]
-categories = ["algorithms", "parsing", "text-processing"]
+description = "A rust implementation of ELIZA - a natural language processing program developed by Joseph Weizenbaum in 1966."
+keywords = ["eliza", "nlp", "weizenbaum", "linguistics", "chatbot"]
+categories = ["algorithms", "text-processing"]
 readme = "README.md"
 include = ["src/**/*", "Cargo.toml", "scripts/*"]
 
@@ -18,7 +18,4 @@ serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
 log = "0.3"
-env_logger = "0.3"
-
-[dev-dependencies]
 env_logger = "0.3"
