@@ -1,35 +1,30 @@
-#[macro_use] extern crate serde_derive;
-extern crate regex;
+#[macro_use] extern crate log;
+extern crate env_logger;
+extern crate eliza;
 
-mod eliza;
-mod alphabet;
-mod script;
-
-use std::{env, io, process};
+use std::{env, io};
 use std::io::Write;
 use eliza::Eliza;
 
 fn main() {
-    //TODO: unit tests
-    //TODO: boxed results vs. eprintln
+    env_logger::init().unwrap();
 
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
-        eprintln!("Usage: `./eliza [SCRIPT]`");
-        process::exit(1);
+        error!("Usage of eliza is: ./eliza [SCRIPT]");
+        panic!("Not enough program arguments");
     }
 
-    println!("ELIZA begin");
     let mut eliza = Eliza::new(&args[1]).expect("Eliza failed to load");
-    println!("Enter '/quit' to leave the session.\n");
-
+    println!("\nEnter '/quit' to leave the session.\n");
     println!("{}\n", eliza.greet()); //eliza greets the user
+
     loop {
         print!("> ");
-        io::stdout().flush().expect("  Failed to read line.");
+        io::stdout().flush().expect("Failed to read line.");
 
         let mut input = String::new();
-        io::stdin().read_line(&mut input).expect("  Failed to read line.");
+        io::stdin().read_line(&mut input).expect("Failed to read line.");
 
         match input.as_ref() {
             "/quit\n" => break,

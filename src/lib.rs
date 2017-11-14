@@ -1,10 +1,14 @@
-use alphabet;
-use alphabet::Alphabet;
+#[macro_use] extern crate serde_derive;
+#[macro_use] extern crate log;
+extern crate regex;
+
+mod alphabet;
+mod script;
 
 use std::error::Error;
 use std::collections::{VecDeque, HashMap};
 use regex::{Regex, Captures};
-
+use alphabet::Alphabet;
 use script::{Script, Keyword, Reflection, Synonym, Transform};
 
 pub struct Eliza {
@@ -14,12 +18,11 @@ pub struct Eliza {
 }
 
 impl Eliza {
-    pub fn new(script_location: &str) -> Result<Eliza, Box<Error>> {
-        //TODO: Perhaps these prints would be better as debug output
+    pub fn new(location: &str) -> Result<Eliza, Box<Error>> {
         let e = Eliza {
             script: {
-                println!("  Loading script...");
-                Script::load(script_location)?
+                info!("Loading script {}", location);
+                Script::load(location)?
             },
             memory: VecDeque::new(),
             rule_usage: HashMap::new(),
@@ -31,24 +34,28 @@ impl Eliza {
     pub fn greet(&self) -> String {
         match self.script.rand_greet(){
             Some(greet) => greet.to_string(),
-            None => String::from("Hello, I am Eliza."), //If greetings are empty, have default
+            None => {
+                warn!("Eliza has no greetings to use");
+                String::from("Hello, I am Eliza.") //If greetings are empty, have default
+            }
         }
     }
 
     pub fn farewell(&self) -> String {
         match self.script.rand_farewell(){
             Some(farwell) => farwell.to_string(),
-            None => String::from("Goodbye."), //If farewells are empty, have default
+            None => {
+                warn!("Eliza has no farewells to use");
+                String::from("Goodbye.") //If farewells are empty, have default
+            }
         }
     }
 
     pub fn respond(&mut self, input: &str) -> String {
-        //Convert the input to lowercase and replace certain words before splitting up the input
-        //into phrases and their word parts
+        //Convert the input to lowercase and transform words before populating the keystack
+        let mut response: Option<String> = None;
         let phrases = get_phrases(&transform(&input.to_lowercase(), &self.script.transforms));
         let (active_phrase, mut keystack) = populate_keystack(phrases, &self.script.keywords);
-
-        let mut response: Option<String> = None;
 
         if let Some(phrase) = active_phrase {
             response = self.get_response(&phrase, &mut keystack);
@@ -58,8 +65,10 @@ impl Eliza {
             res
         } else if let Some(mem) = self.memory.pop_front(){
             //Attempt to use something in memory, otherwise use fallback trick
+            info!("Using memory");
             mem
         } else {
+            info!("Using fallback statement");
             self.fallback()
         }
     }
@@ -67,7 +76,10 @@ impl Eliza {
     fn fallback(&self) -> String {
         match self.script.rand_fallback() {
             Some(fallback) => fallback.to_string(),
-            None => String::from("Go on."), //A fallback for the fallback - har har
+            None => {
+                warn!("Eliza has no fallbacks to use");
+                String::from("Go on.") //A fallback for the fallback - har har
+            }
         }
     }
 
@@ -97,7 +109,7 @@ impl Eliza {
                                     keystack.push_front(entry.clone());
                                     break 'decompostion;
                                 } else {
-                                    eprintln!("[ERR] No such keyword: '{}'", goto);
+                                    error!("No such keyword: {}", goto);
                                     continue; //Something wrong with this GOTO
                                 }
                             }
@@ -210,7 +222,7 @@ fn permutations(decomposition: &str, synonyms: &[Synonym]) -> Vec<Regex> {
     let words = get_words(decomposition);
 
     if decomposition.matches('@').count() > 1 {
-        eprintln!("[ERR] Decomposition rules can have (at most) 1 synonym: '{}'", decomposition);
+        error!("Decomposition rules are limited to one synonym conversion: '{}'", decomposition);
         return re_perms;
     }
 
@@ -238,7 +250,7 @@ fn permutations(decomposition: &str, synonyms: &[Synonym]) -> Vec<Regex> {
         if let Ok(re) = Regex::new(&p) {
             re_perms.push(re)
         } else {
-            eprintln!("[ERR] Invalid decompostion rule: '{}'", decomposition);
+            error!("Invalid decompostion rule: '{}'", decomposition);
         }
     }
 
@@ -264,11 +276,11 @@ fn assemble(rule: &str, captures: &Captures, reflections: &[Reflection]) -> Opti
                     temp = temp.replace(&scrubbed, &reflect(&captures[n], reflections)).replace("$", "");
                 } else {
                     ok = false;
-                    eprintln!("[ERR] {} is outside capture range in: '{}'", n, rule);
+                    error!("{} is outside capture range in: '{}'", n, rule);
                 }
             } else {
                 ok = false;
-                eprintln!("[ERR] Contains invalid capture id: '{}'", rule);
+                error!("Contains invalid capture id: '{}'", rule);
             }
         }
 
@@ -300,7 +312,7 @@ fn reflect(input: &str, reflections: &[Reflection]) -> String {
                 reflected_phrase.push_str(&reflect.word);
             } else {
                 //Unlikely to happen, but print message just incase
-                eprintln!("[ERR] Invalid reflection for pair {:?} in: {}", reflect, input);
+                error!("Invalid reflection for pair {:?} in: '{}'", reflect, input);
             }
         } else {
             //No reflection required
@@ -335,13 +347,7 @@ mod tests {
     use script::{Rule};
 
     #[test]
-    fn loading_eliza_okay() {
-        //TODO: Decouple tests from input json files
-        assert!(Eliza::new("scripts/rogerian_psychiatrist.json").is_ok());
-    }
-
-    #[test]
-    fn valid_permutations(){
+    fn perm_valid(){
         let synonyms: Vec<Synonym> = vec!(Synonym {
             word: "family".to_string(),
             equivalents: vec!("brother".to_string(), "mother".to_string())
@@ -354,7 +360,7 @@ mod tests {
     }
 
     #[test]
-    fn invalid_permutation(){
+    fn perm_invalid(){
         let synonyms: Vec<Synonym> = vec!(Synonym {
             word: "family".to_string(),
             equivalents: vec!("brother".to_string(), "mother".to_string())
@@ -365,7 +371,7 @@ mod tests {
     }
 
     #[test]
-    fn simple_permutation(){
+    fn perm_simple(){
         let synonyms: Vec<Synonym> = vec!(Synonym {
             word: "family".to_string(),
             equivalents: vec!("brother".to_string(), "mother".to_string())
