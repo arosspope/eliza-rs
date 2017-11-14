@@ -1,4 +1,3 @@
-extern crate env_logger;
 extern crate eliza;
 
 use eliza::Eliza;
@@ -19,7 +18,6 @@ fn convo_textbook(){
     //'ELIZA — A computer program for the study of natural language communication between man and
     // machine' by Joseph Weizenbaum 1966
     let mut e = Eliza::new("scripts/rogerian_psychiatrist.json").unwrap();
-    let _ = env_logger::init();
 
     assert_eq!("In what way?", e.respond("Men are all alike."));
     assert_eq!("Can you think of a specific example?", e.respond("They're always bugging us about something or other."));

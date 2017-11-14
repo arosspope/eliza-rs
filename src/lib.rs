@@ -331,12 +331,6 @@ fn reflect(input: &str, reflections: &[Reflection]) -> String {
 }
 
 fn get_phrases(input: &str) -> Vec<String> {
-    // input.split(|c| c == '.' || c == ',' || c == '?')
-    //      .map(|s| s.trim().to_string()).collect()
-    //
-    // let split2: Vec<String> = split1.iter().split(" but ")
-    //     .map(|s| s.trim().to_string()).collect();
-
     input.split(" but ").flat_map(|s| s.split(|c| c == '.' || c == ',' || c == '?'))
         .map(|s| s.trim().to_string()).collect()
 }
@@ -407,7 +401,7 @@ mod tests {
 
         //All equal precedence, should just return the first
         e.rule_usage = usages;
-        assert_eq!("first", e.get_reassembly("foo", &vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("first", e.get_reassembly("", &vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(2, e.rule_usage["first"]);
     }
 
@@ -424,7 +418,7 @@ mod tests {
 
         //One has been used less than the rest
         e.rule_usage = usages;
-        assert_eq!("third", e.get_reassembly("foo", &vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("third", e.get_reassembly("", &vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(3, e.rule_usage["third"]);
     }
 
@@ -440,7 +434,7 @@ mod tests {
 
         //One has never been used
         e.rule_usage = usages;
-        assert_eq!("fourth", e.get_reassembly("foo", &vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("fourth", e.get_reassembly("", &vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(1, e.rule_usage["fourth"]);
     }
 
@@ -481,8 +475,7 @@ mod tests {
     fn transform_phrases(){
         let transforms = vec!(
             Transform {word: String::from("computer"), equivalents: vec!(String::from("machine"), String::from("computers"))},
-            Transform {word: String::from("remember"), equivalents: vec!(String::from("recollect"))},
-            Transform {word: String::from("i am"), equivalents: vec!(String::from("im"))}
+            Transform {word: String::from("remember"), equivalents: vec!(String::from("recollect"))}
         );
 
         assert_eq!("computer will one day be the superior computer.",
@@ -490,9 +483,6 @@ mod tests {
 
         assert_eq!("I cant remember.",
             transform("I cant recollect.", &transforms));
-
-        assert_eq!("I am depressed all the time.",
-            transform("I am depressed all the time.", &transforms)); //no change
     }
 
     #[test]
