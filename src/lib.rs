@@ -99,7 +99,7 @@ impl Eliza {
                     if let Some(cap) = re.captures(phrase)
                     {
                         //A match was found: find the best reassembly rule to use
-                        if let Some(assem) = self.get_reassembly(&r.reassembly_rules)
+                        if let Some(assem) = self.get_reassembly(&r.decomposition_rule, &r.reassembly_rules)
                         {
                             if let Some(goto) = is_goto(&assem) {
                                 //The best rule was a goto, push associated key entry to stack
@@ -136,15 +136,18 @@ impl Eliza {
         response
     }
 
-    fn get_reassembly(&mut self, rules: &[String]) -> Option<String> {
+    fn get_reassembly(&mut self, id: &str, rules: &[String]) -> Option<String> {
         let mut best_rule: Option<String> = None;
         let mut count: Option<usize> = None;
 
+        //rules are prepended with an id to make them unique within that domain
+        //(e.g. deconstruction rules could share the same assembly rule)
         for rule in rules {
-            match self.rule_usage.contains_key(rule) {
+            let key = String::from(id) + rule;
+            match self.rule_usage.contains_key(&key) {
                 true => {
                     //If it has already been used, get its usage count
-                    let usage = self.rule_usage[rule];
+                    let usage = self.rule_usage[&key];
                     if let Some(c) = count {
                         if usage < c {
                             //The usage is less than the running total
@@ -160,7 +163,7 @@ impl Eliza {
                 false => {
                     //The rule has never been used before - this has precedence
                     best_rule = Some(rule.clone());
-                    self.rule_usage.insert(rule.to_string(), 0);
+                    self.rule_usage.insert(key, 0);
                     break;
                 }
             }
@@ -168,7 +171,8 @@ impl Eliza {
 
         //For whatever rule we use (if any), increment its usage count
         if best_rule.is_some(){
-            if let Some(usage) = self.rule_usage.get_mut(&best_rule.clone().unwrap()){
+            let key = String::from(id) + &best_rule.clone().unwrap();
+            if let Some(usage) = self.rule_usage.get_mut(&key){
                 *usage = *usage + 1;
             }
         }
@@ -327,7 +331,14 @@ fn reflect(input: &str, reflections: &[Reflection]) -> String {
 }
 
 fn get_phrases(input: &str) -> Vec<String> {
-    input.split(|c| c == '.' || c == ',' || c == '?').map(|s| s.trim().to_string()).collect()
+    // input.split(|c| c == '.' || c == ',' || c == '?')
+    //      .map(|s| s.trim().to_string()).collect()
+    //
+    // let split2: Vec<String> = split1.iter().split(" but ")
+    //     .map(|s| s.trim().to_string()).collect();
+
+    input.split(" but ").flat_map(|s| s.split(|c| c == '.' || c == ',' || c == '?'))
+        .map(|s| s.trim().to_string()).collect()
 }
 
 fn get_words(phrase: &str) -> Vec<String> {
@@ -396,7 +407,7 @@ mod tests {
 
         //All equal precedence, should just return the first
         e.rule_usage = usages;
-        assert_eq!("first", e.get_reassembly(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("first", e.get_reassembly("foo", &vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(2, e.rule_usage["first"]);
     }
 
@@ -413,7 +424,7 @@ mod tests {
 
         //One has been used less than the rest
         e.rule_usage = usages;
-        assert_eq!("third", e.get_reassembly(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("third", e.get_reassembly("foo", &vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(3, e.rule_usage["third"]);
     }
 
@@ -429,7 +440,7 @@ mod tests {
 
         //One has never been used
         e.rule_usage = usages;
-        assert_eq!("fourth", e.get_reassembly(&vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
+        assert_eq!("fourth", e.get_reassembly("foo", &vec!("first".to_string(), "second".to_string(), "third".to_string(), "fourth".to_string())).unwrap());
         assert_eq!(1, e.rule_usage["fourth"]);
     }
 
@@ -470,7 +481,8 @@ mod tests {
     fn transform_phrases(){
         let transforms = vec!(
             Transform {word: String::from("computer"), equivalents: vec!(String::from("machine"), String::from("computers"))},
-            Transform {word: String::from("remember"), equivalents: vec!(String::from("recollect"))}
+            Transform {word: String::from("remember"), equivalents: vec!(String::from("recollect"))},
+            Transform {word: String::from("i am"), equivalents: vec!(String::from("im"))}
         );
 
         assert_eq!("computer will one day be the superior computer.",
@@ -478,6 +490,9 @@ mod tests {
 
         assert_eq!("I cant remember.",
             transform("I cant recollect.", &transforms));
+
+        assert_eq!("I am depressed all the time.",
+            transform("I am depressed all the time.", &transforms)); //no change
     }
 
     #[test]

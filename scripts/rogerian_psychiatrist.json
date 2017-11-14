@@ -32,7 +32,7 @@
     { "word" : "computer", "equivalents" : ["machine", "machines", "computers"]},
     { "word" : "was", "equivalents" : ["were"]},
     { "word" : "you are", "equivalents" : ["you're", "youre"]},
-    { "word" : "i am", "equivalents" : ["i'm", "im"]},
+    { "word" : "i am", "equivalents" : ["i'm"]},
     { "word" : "alike", "equivalents" : ["same", "identical", "equivalent"]},
     { "word" : "sorry", "equivalents" : ["apologise"]},
     { "word" : "we would", "equivalents" : ["we'd"]}
@@ -404,9 +404,9 @@
         },
         {
           "memorise" : false,
-          "decomposition_rule" : "(.*)i am(.* @sad)" ,
+          "decomposition_rule" : "(.*)i am (.*@sad)" ,
           "reassembly_rules" : [
-            "I am sorry to hear that you are $2.",
+            "I am sorry to hear you are $2.",
             "Do you think coming here will help you not to be $2?",
             "I'm sure it's not pleasant to be $2.",
             "Can you explain what made you $2?"
@@ -414,7 +414,7 @@
         },
         {
           "memorise" : false,
-          "decomposition_rule" : "(.*)i am(.* @happy)" ,
+          "decomposition_rule" : "(.*)i am (.*@happy)" ,
           "reassembly_rules" : [
             "How have I helped you to be $2?",
             "Has your treatment made you $2?",
@@ -440,7 +440,7 @@
         },
         {
           "memorise" : false,
-          "decomposition_rule" : "(.*)i(.* @belief)(.*)you(.+)" ,
+          "decomposition_rule" : "(.*)i (.*@belief) (.*)you(.+)" ,
           "reassembly_rules" : [
               "GOTO you"
           ]
@@ -489,7 +489,7 @@
         },
         {
           "memorise" : false,
-          "decomposition_rule" : "(.*)i(.*)you(.+)"  ,
+          "decomposition_rule" : "(.*)i (.*)you(.+)"  ,
           "reassembly_rules" : [
             "Perhaps in your fantasies we $2 each other.",
             "Do you wish to $2 me?",
@@ -603,7 +603,7 @@
         },
         {
           "memorise" : false,
-          "decomposition_rule" : "(.*)my(.* @family) (.+)" ,
+          "decomposition_rule" : "(.*)my (.*@family)(.*)" ,
           "reassembly_rules" : [
             "Tell me more about your family.",
             "Who else in your family $3?",
@@ -818,10 +818,10 @@
           "decomposition_rule" : "(.+)" ,
           "reassembly_rules" : [
             "In what way?",
-            "What resemblence do you see?",
+            "What resemblance do you see?",
             "What does that similarity suggest to you?",
             "What other connections do you see?",
-            "What do you suppose that resemblence means?",
+            "What do you suppose that resemblance means?",
             "What is the connection, do you suppose?",
             "Could there really be some connection?",
             "How?"
