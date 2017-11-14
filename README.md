@@ -3,7 +3,7 @@
 [![Documentation](https://docs.rs/eliza/badge.svg)](https://docs.rs/eliza)
 [![Build Status](https://travis-ci.org/arosspope/eliza.svg?branch=master)](https://travis-ci.org/arosspope/eliza)
 
-This rust binary is an implementation of the early natural language processing computer program **ELIZA**. The original program was developed from 1964 to 1966 at the MIT Artificial Intelligence Laboratory by Joseph Weizenbaum.
+This rust binary is an implementation of the early 'chatbot' program **ELIZA**. The original program was developed from 1964 to 1966 at the MIT Artificial Intelligence Laboratory by Joseph Weizenbaum.
 
 ## Introduction
 
@@ -44,12 +44,15 @@ To start an ELIZA session, you must provide the binary with a path to an ELIZA s
 
 ```bash
 user@foo(eliza-rs) ~> cargo run scripts/doctor.json
+...
 ```
 
-If instead, you installed from crates.io, then the location of `doctor.json` will be different. Out of convenience I decided to bundle the `doctor.json` script with the eliza binary on crates.io. For each user, it's location will be slightly different, but somewhere in your cargo registry, similar to:
+If instead, you installed from crates.io, then the location of `doctor.json` will be different. Out of convenience I decided to bundle the `doctor.json` script with the eliza binary on crates.io. For each user, it's location will be slightly different within the crates registry, so I would suggest moving it to somewhere more memorable before running:
 
 ```bash
-user@foo(~) ~> eliza .cargo/registry/src/[some_hash]/eliza-[ver]/scripts/doctor.json
+user@foo(~) ~> cp .cargo/registry/src/[some_hash]/eliza-[ver]/scripts/doctor.json .
+user@foo(~) ~> eliza doctor.json
+...
 ```
 
 ![running](https://i.imgur.com/RUneq7b.gif)
