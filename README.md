@@ -1,4 +1,7 @@
 # eliza-rs
+[![Crates.io](https://img.shields.io/crates/v/eliza.svg)](https://crates.io/crates/eliza)
+[![Documentation](https://docs.rs/eliza/badge.svg)](https://docs.rs/eliza)
+[![Build Status](https://travis-ci.org/arosspope/eliza.svg?branch=master)](https://travis-ci.org/arosspope/eliza)
 
 ELIZA is a computer program that emulates a Rogerian psychotherapist - implemented in rust.
 
@@ -7,7 +10,7 @@ ELIZA is a computer program that emulates a Rogerian psychotherapist - implement
 (short blurb about weizenbaum)
 > reference
 
-(gif of ELIZA conversation using rogerian mode)
+![convo](http://i.imgur.com/Z69mFI8.gif)
 
 ## Installation
 
@@ -19,11 +22,11 @@ ELIZA is a computer program that emulates a Rogerian psychotherapist - implement
 
 (code snip of command to start)
 
-(gif of starting eliza and stopping it)
+![running](https://i.imgur.com/hORiIR0.gif)
 
 _________
 
-## Developing ELIZA scripts
+## Developers
 
 (blurb about how eliza scripts are different to the binary)
 

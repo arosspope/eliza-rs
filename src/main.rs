@@ -2,7 +2,7 @@
 extern crate env_logger;
 extern crate eliza;
 
-use std::{env, io};
+use std::{env, io, thread, time};
 use std::io::Write;
 use eliza::Eliza;
 
@@ -29,7 +29,11 @@ fn main() {
         match input.as_ref() {
             "/quit\n" => break,
             //Based on the rules in the script, eliza responds to the given input
-            _ => println!("{}\n", eliza.respond(&input)),
+            _ => {
+                //Insert short delay to make eliza seem like she's thinking
+                thread::sleep(time::Duration::from_millis(300));
+                println!("{}\n", eliza.respond(&input));
+            },
         }
     }
 
