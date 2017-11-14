@@ -32,7 +32,7 @@ fn convo_textbook(){
     assert_eq!("Your father?", e.respond("My father."));
     assert_eq!("What resemblance do you see?", e.respond("You are like my father in some ways."));
     assert_eq!("What makes you think I am not very aggressive?", e.respond("You are not very aggressive but I think you don't want me to notice that."));
-    assert_eq!("Why do you think I don't argue with you?", e.respond("You don't argue with me."));
+    assert_eq!("Why do you think I dont argue with you?", e.respond("You don't argue with me."));
     assert_eq!("Does it please you to believe I am afraid of you?", e.respond("You are afraid of me."));
     assert_eq!("What else comes to mind when you think of your father?", e.respond("My father is afraid of everybody."));
     assert_eq!("Does that have anything to do with the fact that your boyfriend made you come here?", e.respond("Bullies."));

@@ -532,6 +532,19 @@
         },
         {
           "memorise" : false,
+          "decomposition_rule" : "(.*)you (.+ me)",
+          "reassembly_rules" : [
+            "Why do you think I $2?",
+            "You like to think I $2 - don't you?",
+            "What makes you think I $2?",
+            "Really, I $2?",
+            "Do you wish to believe I $2?",
+            "Suppose I did $2 - What would that mean?",
+            "Does someone else believe I $2?"
+          ]
+        },
+        {
+          "memorise" : false,
           "decomposition_rule" : "(.*)you(.+)" ,
           "reassembly_rules" : [
             "We were discussing you -- not me.",
@@ -608,7 +621,7 @@
             "Tell me more about your family.",
             "Who else in your family $3?",
             "Your $2?",
-            "What else comes to your mind when you think of your $2?"
+            "What else comes to mind when you think of your $2?"
           ]
         },
         {
