@@ -4,7 +4,7 @@ use eliza::Eliza;
 
 #[test]
 fn load_ok(){
-    assert!(Eliza::new("scripts/rogerian_psychiatrist.json").is_ok());
+    assert!(Eliza::new("scripts/doctor.json").is_ok());
 }
 
 #[test]
@@ -17,7 +17,7 @@ fn convo_textbook(){
     //This is the classic conversation with ELIZA as outlined in the Article:
     //'ELIZA — A computer program for the study of natural language communication between man and
     // machine' by Joseph Weizenbaum 1966
-    let mut e = Eliza::new("scripts/rogerian_psychiatrist.json").unwrap();
+    let mut e = Eliza::new("scripts/doctor.json").unwrap();
 
     assert_eq!("In what way?", e.respond("Men are all alike."));
     assert_eq!("Can you think of a specific example?", e.respond("They're always bugging us about something or other."));
