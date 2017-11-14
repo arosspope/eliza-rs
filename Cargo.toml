@@ -1,6 +1,6 @@
 [package]
 name = "eliza"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["arosspope <andrew.pope456@gmail.com>"]
 license = "MIT/Apache-2.0"
 homepage = "https://github.com/arosspope/eliza-rs.git"
@@ -9,7 +9,7 @@ description = "A rust implementation of ELIZA - a natural language processing pr
 keywords = ["eliza", "nlp", "weizenbaum", "linguistics", "chatbot"]
 categories = ["algorithms", "text-processing"]
 readme = "README.md"
-include = ["src/**/*", "Cargo.toml", "scripts/*"]
+include = ["src/**/*", "Cargo.toml", "scripts/doctor.json"]
 
 [dependencies]
 regex = "0.2"

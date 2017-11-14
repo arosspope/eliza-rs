@@ -2,8 +2,8 @@
 #[macro_use] extern crate log;
 extern crate regex;
 
+pub mod script; //Making script public so that its documentation may be viewed on doc.rs
 mod alphabet;
-mod script;
 
 use std::error::Error;
 use std::collections::{VecDeque, HashMap};
