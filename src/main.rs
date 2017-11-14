@@ -1,3 +1,29 @@
+//! A rust implementation of ELIZA - a natural language processing program developed by Joseph
+//! Weizenbaum in 1966.
+//!
+//! ## Starting ELIZA
+//!
+//! Assuming you have installed from source, you could run ELIZA like so, supplying the famous
+//! 'DOCOTOR' program as the script:
+//!
+//! ```md,no_run
+//! user@foo(eliza) ~> cargo run scripts/doctor.json
+//! ...
+//! ```
+//!
+//! ## Stopping ELIZA
+//!
+//! To stop ELIZA, simply supply the `/quit` command:
+//! ```md,no_run
+//! ...
+//! Is something troubling you?
+//!
+//! > /quit
+//!
+//! Goodbye. I look forward to our next session.
+//! user@foo(eliza) ~>
+//! ```
+//!
 #[macro_use] extern crate log;
 extern crate env_logger;
 extern crate eliza;
