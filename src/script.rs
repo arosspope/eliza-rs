@@ -41,7 +41,7 @@ pub struct Keyword {
     pub rules : Vec<Rule>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Default, Serialize, Deserialize)]
 pub struct Script {
     pub greetings: Vec<String>,
     pub farewells: Vec<String>,

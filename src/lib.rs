@@ -11,6 +11,7 @@ use regex::{Regex, Captures};
 use alphabet::Alphabet;
 use script::{Script, Keyword, Reflection, Synonym, Transform};
 
+#[derive(Default)]
 pub struct Eliza {
     script : Script,
     memory : VecDeque<String>,
@@ -21,7 +22,7 @@ impl Eliza {
     pub fn new(location: &str) -> Result<Eliza, Box<Error>> {
         let e = Eliza {
             script: {
-                info!("Loading script {}", location);
+                info!("Loading {}", location);
                 Script::load(location)?
             },
             memory: VecDeque::new(),
@@ -384,7 +385,7 @@ mod tests {
 
     #[test]
     fn assemble_rule_equal(){
-        let mut e = Eliza::new("scripts/rogerian_psychiatrist.json").unwrap();
+        let mut e: Eliza = Default::default();
 
         //Create a fake rule usage HashMap
         let mut usages: HashMap<String, usize> = HashMap::new();
@@ -401,7 +402,7 @@ mod tests {
 
     #[test]
     fn assemble_rule_smaller(){
-        let mut e = Eliza::new("scripts/rogerian_psychiatrist.json").unwrap();
+        let mut e: Eliza = Default::default();
 
         //Create a fake rule usage HashMap
         let mut usages: HashMap<String, usize> = HashMap::new();
@@ -418,7 +419,7 @@ mod tests {
 
     #[test]
     fn assemble_rule_unknown(){
-        let mut e = Eliza::new("scripts/rogerian_psychiatrist.json").unwrap();
+        let mut e: Eliza = Default::default();
 
         //Create a fake rule usage HashMap
         let mut usages: HashMap<String, usize> = HashMap::new();
