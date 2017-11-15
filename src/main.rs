@@ -14,6 +14,7 @@
 //! ## Stopping ELIZA
 //!
 //! To stop ELIZA, simply supply the `/quit` command:
+//!
 //! ```md,no_run
 //! ...
 //! Is something troubling you?
@@ -38,7 +39,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         error!("Usage of eliza is: ./eliza [SCRIPT]");
-        panic!("Not enough program arguments");
+        panic!("Not enough arguments");
     }
 
     let mut eliza = Eliza::new(&args[1]).expect("Eliza failed to load");

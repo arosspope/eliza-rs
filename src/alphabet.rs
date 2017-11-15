@@ -1,4 +1,4 @@
-//! Contains helpful constants and functions used in substitution ciphers.
+//! Contains helpful constants and functions.
 //!
 const ALPHABET_LOWER: [char; 26] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -37,20 +37,6 @@ pub trait Alphabet {
     fn scrub(&self, text: &str) -> String {
         text.chars().into_iter()
             .filter(|&c| self.find_position(c).is_some()).collect()
-    }
-
-    /// Finds the multiplicative inverse of an index such that `a*x = 1 (mod n)`. Where `a`
-    /// is the number we are inverting, `x` is the multiplicative inverse, and `n` is the length of
-    /// the alphabet.
-    ///
-    fn multiplicative_inverse(&self, a: isize) -> Option<usize> {
-        for x in 1..self.length() {
-            if self.modulo((a * x as isize) as isize) == 1 {
-                return Some(x as usize);
-            }
-        }
-
-        None
     }
 
     /// Returns the length of the alphabet

@@ -11,7 +11,9 @@ This rust binary is an implementation of the early 'chatbot' program **ELIZA**. 
 
 ELIZA simulates conversation by implementing _pattern matching_ and a _substitution methodology_ that gives users an illusion of understanding on the part of the program. Directives on how to process input are provided by 'scripts', (written originally in MAD-Slip, now in json) which allow ELIZA to engage in discourse by following script rules. The most famous script, [DOCTOR](scripts/doctor.json), simulates a Rogerian psychotherapist.
 
-> Weizenbaum, J. (1996), _ELIZA - A computer program for the study of natural language communication between man and machine_, Communications of the ACM, vol 9, issue 1
+Weizenbaum’s intention with the ELIZA program, was to 'demonstrate that the communication between man and machine is superficial'.
+
+> [Weizenbaum, J. (1996)](https://www.cse.buffalo.edu//~rapaport/572/S02/weizenbaum.eliza.1966.pdf), _ELIZA - A computer program for the study of natural language communication between man and machine_, Communications of the ACM, vol 9, issue 1
 
 ## Installation
 
@@ -38,7 +40,7 @@ You may also want to optionally run the unit tests to ensure ELIZA is behaving a
 user@foo(eliza-rs) ~> cargo test
 ```
 
-## Operation
+## Usage
 
 To start an ELIZA session, you must provide the binary with a path to an ELIZA script. This script takes the form of a `json` file. Assuming that you have installed from source and wanted to run the famous DOCTOR program, the command you would run from the project root would be similar to:
 
@@ -62,8 +64,23 @@ _________
 
 ## Writing your own ELIZA script
 
-The beuaty of ELIZA's design methodology means that the role of the programmer and playwright may be seperated. An important property of ELIZA is that a script is data - it is not part of the program itself. Hence, ELIZA is not restricted to a particular set of recognition patterns or responses, indeed not even to any specific language.
+The beauty of ELIZA's design methodology means that the role of the programmer and playwright are separated. An important property of ELIZA is that a script is data - it is not part of the program itself. Hence, ELIZA is not restricted to a particular set of recognition patterns or responses, indeed not even to any specific language.
 
 As such, contributors may decide to improve the original `doctor.json` script or completely create their own from scratch. A simple example of a [pirate script](scripts/pirate.json) has been included to show how little is needed to start creating something neat.
 
-More information on the structure of a script, can be found in the documentation for the `script` module on [doc.rs](https://docs.rs/eliza).
+More information on the structure of a script can be found in the documentation for the `script` module on [doc.rs](https://docs.rs/eliza).
+
+### Testing
+
+Due to the somewhat deterministic nature of ELIZA, you can write unit tests to evaluate script rules. For example, in `tests/conversation_test.rs`, you could add the following:
+
+```rust
+#[test]
+fn your_test(){
+    let mut e = Eliza::new("scripts/your_script.json").unwrap();
+    assert_eq!("bar", e.respond("foo"));
+}
+```
+> _Where 'foo' is the users input to ELIZA, and 'bar' is the response._
+
+It is also important to note that ELIZA produces logging output. To observe these logs during program execution, start the binary with the environment variable `RUST_LOG=eliza`.

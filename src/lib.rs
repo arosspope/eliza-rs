@@ -1,3 +1,26 @@
+//! This library contains the ELIZA processing logic as originally outlined by
+//! Weizenbaum<sup>[1]</sup> in 1996.
+//!
+//! A simple explanation of ELIZA's processing logic will be briefly outlined. For
+//! information on ELIZA scripts, see the documentation on the `Script` struct.
+//!
+//! ## The Algorithm
+//!
+//! 1. Attempt to transform each word in the user's input, so the text is easier to process.
+//! 2. Disassemble the input into phrases, and return the first phrase that contains a keyword(s).
+//! 3. For each keyword found, attempt to match the phrase with an associated decomposition rule.
+//! 4. If the decomposition rule is valid for that phrase, select one of the associated
+//! reassembly rules to form a response based on contextual information from the phrase.
+//! 5. If none of the keyword/rule pairs are true for that phrase, attempt to retrieve a 'memory'
+//! (a response that was assembled earlier in conversation, but was stored instead) or, use a
+//! general 'fallback' statement.
+//!
+//! ## References
+//!
+//! [[1]](https://www.cse.buffalo.edu//~rapaport/572/S02/weizenbaum.eliza.1966.pdf) Weizenbaum, J.
+//! (1996), _ELIZA - A computer program for the study of natural language communication between
+//! man and machine_, Communications of the ACM, vol 9, issue 1
+//!
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate log;
 extern crate regex;
@@ -11,6 +34,9 @@ use regex::{Regex, Captures};
 use alphabet::Alphabet;
 use script::{Script, Keyword, Reflection, Synonym, Transform};
 
+/// An ELIZA instance.
+///
+/// This struct is created by the `new()` method. See its documentation for more.
 #[derive(Default)]
 pub struct Eliza {
     script : Script,
@@ -19,6 +45,9 @@ pub struct Eliza {
 }
 
 impl Eliza {
+    /// Initialise ELIZA with a script.
+    ///
+    /// Will return `Err` if the script at the specified location is invalid.
     pub fn new(location: &str) -> Result<Eliza, Box<Error>> {
         let e = Eliza {
             script: {
@@ -32,6 +61,8 @@ impl Eliza {
         Ok(e)
     }
 
+    /// Randomly selects a greeting statement from the `greetings` list in the script.
+    ///
     pub fn greet(&self) -> String {
         match self.script.rand_greet(){
             Some(greet) => greet.to_string(),
@@ -42,6 +73,8 @@ impl Eliza {
         }
     }
 
+    /// Randomly selects a farewell statement from the `farewell` list in the script.
+    ///
     pub fn farewell(&self) -> String {
         match self.script.rand_farewell(){
             Some(farwell) => farwell.to_string(),
@@ -52,6 +85,8 @@ impl Eliza {
         }
     }
 
+    /// Responds to a given input string based on the internal ELIZA script.
+    ///
     pub fn respond(&mut self, input: &str) -> String {
         //Convert the input to lowercase and transform words before populating the keystack
         let mut response: Option<String> = None;
@@ -107,6 +142,7 @@ impl Eliza {
                                     self.script.keywords.iter().find(|ref a| a.key == goto)
                                 {
                                     //Push to front of keystack and skip to it
+                                    info!("Using GOTO '{}' for key '{}' and decomp rule '{}'", goto, next.key, r.decomposition_rule);
                                     keystack.push_front(entry.clone());
                                     break 'decompostion;
                                 } else {
@@ -120,10 +156,12 @@ impl Eliza {
                             if response.is_some(){
                                 if r.memorise {
                                     //We'll save this response for later...
+                                    info!("Saving response that matched key '{}' and decomp rule '{}'", next.key, r.decomposition_rule);
                                     self.memory.push_back(response.unwrap());
                                     response = None;
                                 } else {
                                     //We found a response, exit
+                                    info!("Found response for key '{}' and decomp rule '{}'", next.key, r.decomposition_rule);
                                     break 'search;
                                 }
                             }
@@ -141,7 +179,7 @@ impl Eliza {
         let mut count: Option<usize> = None;
 
         //rules are prepended with an id to make them unique within that domain
-        //(e.g. deconstruction rules could share the same assembly rule)
+        //(e.g. deconstruction rules could share similar looking assembly rules)
         for rule in rules {
             let key = String::from(id) + rule;
             match self.rule_usage.contains_key(&key) {
@@ -264,7 +302,6 @@ fn permutations(decomposition: &str, synonyms: &[Synonym]) -> Vec<Regex> {
 
 fn assemble(rule: &str, captures: &Captures, reflections: &[Reflection]) -> Option<String>
 {
-    //TODO: Better way using regex replace all?
     let mut temp = String::from(rule);
     let mut ok = true;
     let words = get_words(rule);
@@ -339,7 +376,7 @@ fn get_words(phrase: &str) -> Vec<String> {
     phrase.split_whitespace().map(|s| s.to_string()).collect()
 }
 
-//Returns NONE is not goto, otherwise reutrns goto statement
+//Returns NONE if not a goto, otherwise reutrns goto id
 fn is_goto(statement: &str) -> Option<String> {
     match statement.contains("GOTO"){
         true => Some(statement.replace("GOTO", "").replace(char::is_whitespace, "")),
