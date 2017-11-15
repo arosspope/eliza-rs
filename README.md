@@ -1,7 +1,7 @@
 # eliza-rs
 [![Crates.io](https://img.shields.io/crates/v/eliza.svg)](https://crates.io/crates/eliza)
 [![Documentation](https://docs.rs/eliza/badge.svg)](https://docs.rs/eliza)
-[![Build Status](https://travis-ci.org/arosspope/eliza.svg?branch=master)](https://travis-ci.org/arosspope/eliza)
+[![Build Status](https://travis-ci.org/arosspope/eliza-rs.svg?branch=master)](https://travis-ci.org/arosspope/eliza-rs)
 
 This rust binary is an implementation of the early 'chatbot' program **ELIZA**. The original program was developed from 1964 to 1966 at the MIT Artificial Intelligence Laboratory by Joseph Weizenbaum.
 
@@ -9,11 +9,9 @@ This rust binary is an implementation of the early 'chatbot' program **ELIZA**. 
 
 ![convo](http://i.imgur.com/Z69mFI8.gif)
 
-ELIZA simulates conversation by implementing _pattern matching_ and a _substitution methodology_ that gives users an illusion of understanding on the part of the program. Directives on how to process input are provided by 'scripts', (written originally in MAD-Slip, now in json) which allow ELIZA to engage in discourse by following script rules. The most famous script, [DOCTOR](scripts/doctor.json), simulates a Rogerian psychotherapist.
+ELIZA simulates conversation by implementing _pattern matching_ and a _substitution methodology_ that gives users an illusion of understanding on the part of the program. Directives on how to process input are provided by 'scripts', (written originally in MAD-Slip, now in json) which allow ELIZA to engage in discourse by following script rules. Weizenbaum’s intention was to demonstrate that the communication between man and machine is superficial. The most famous script, [DOCTOR](scripts/doctor.json), simulates a Rogerian psychotherapist. 
 
-Weizenbaum’s intention with the ELIZA program, was to 'demonstrate that the communication between man and machine is superficial'.
-
-> [Weizenbaum, J. (1996)](https://www.cse.buffalo.edu//~rapaport/572/S02/weizenbaum.eliza.1966.pdf), _ELIZA - A computer program for the study of natural language communication between man and machine_, Communications of the ACM, vol 9, issue 1
+> Weizenbaum, J. (1996), _ELIZA - A computer program for the study of natural language communication between man and machine_, Communications of the ACM, vol 9, issue 1
 
 ## Installation
 
