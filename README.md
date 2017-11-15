@@ -21,7 +21,7 @@ To install this rust binary, one can do so from source or from [crates.io](https
 
 Installing `eliza` from crates.io is quite simple with cargo:
 ```bash
-user@foo(~) ~> cargo install eliza
+user@foo(~)$ cargo install eliza
 ```
 
 ### From source
@@ -29,13 +29,13 @@ user@foo(~) ~> cargo install eliza
 After forking this project and cloning it to your local machine, navigate to the project directory and run:
 
 ```bash
-user@foo(eliza-rs): cargo build
+user@foo(eliza-rs)$ cargo build
 ```
 
 You may also want to optionally run the unit tests to ensure ELIZA is behaving as expected:
 
 ```bash
-user@foo(eliza-rs) ~> cargo test
+user@foo(eliza-rs)$ cargo test
 ```
 
 ## Usage
@@ -43,15 +43,15 @@ user@foo(eliza-rs) ~> cargo test
 To start an ELIZA session, you must provide the binary with a path to an ELIZA script. This script takes the form of a `json` file. Assuming that you have installed from source and wanted to run the famous DOCTOR program, the command you would run from the project root would be similar to:
 
 ```bash
-user@foo(eliza-rs) ~> cargo run scripts/doctor.json
+user@foo(eliza-rs)$ cargo run scripts/doctor.json
 ...
 ```
 
 If instead, you installed from crates.io, then the location of `doctor.json` will be different. Out of convenience I decided to bundle the `doctor.json` script with the eliza binary on crates.io. For each user, it's location will be slightly different within the crates registry, so I would suggest moving it to somewhere more memorable before running:
 
 ```bash
-user@foo(~) ~> cp .cargo/registry/src/[some_hash]/eliza-[ver]/scripts/doctor.json .
-user@foo(~) ~> eliza doctor.json
+user@foo(~)$ cp .cargo/registry/src/[some_hash]/eliza-[ver]/scripts/doctor.json .
+user@foo(~)$ eliza doctor.json
 ...
 ```
 
