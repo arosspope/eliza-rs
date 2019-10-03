@@ -44,9 +44,9 @@
 //!
 //! See struct documentation for more information on each element.
 //!
-extern crate serde;
-extern crate serde_json;
-extern crate rand;
+use serde;
+use serde_json;
+use rand;
 
 use self::rand::Rng;
 use self::serde::de::Deserialize;

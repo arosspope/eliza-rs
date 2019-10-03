@@ -23,7 +23,7 @@
 //!
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate log;
-extern crate regex;
+
 
 pub mod script; //Making script public so that its documentation may be viewed on doc.rs
 mod alphabet;
@@ -300,7 +300,7 @@ fn permutations(decomposition: &str, synonyms: &[Synonym]) -> Vec<Regex> {
     re_perms
 }
 
-fn assemble(rule: &str, captures: &Captures, reflections: &[Reflection]) -> Option<String>
+fn assemble(rule: &str, captures: &Captures<'_>, reflections: &[Reflection]) -> Option<String>
 {
     let mut temp = String::from(rule);
     let mut ok = true;
