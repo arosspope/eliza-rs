@@ -44,9 +44,9 @@
 //!
 //! See struct documentation for more information on each element.
 //!
-extern crate serde;
-extern crate serde_json;
-extern crate rand;
+use rand;
+use serde;
+use serde_json;
 
 use self::rand::Rng;
 use self::serde::de::Deserialize;
@@ -143,8 +143,8 @@ pub struct Reflection {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Rule {
     pub memorise: bool,
-    pub decomposition_rule : String,
-    pub reassembly_rules : Vec<String>,
+    pub decomposition_rule: String,
+    pub reassembly_rules: Vec<String>,
 }
 
 ///  A keyword and it's associated decompositon and reassembly rules.
@@ -155,9 +155,9 @@ pub struct Rule {
 ///
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Keyword {
-    pub key : String,
-    pub rank : u8,
-    pub rules : Vec<Rule>,
+    pub key: String,
+    pub rank: u8,
+    pub rules: Vec<Rule>,
 }
 
 /// A collection of ELIZA directives.
@@ -188,8 +188,9 @@ impl Script {
     /// Will load an ELIZA json script from the file system.
     ///
     /// Will return `Err` if the script at the specified location is invalid or non-existant.
-    pub fn load<P: AsRef<Path>>(path: P) -> Result<Script, Box<Error>>
-        where for <'de> Script: Deserialize<'de>
+    pub fn load<P: AsRef<Path>>(path: P) -> Result<Script, Box<dyn Error>>
+    where
+        for<'de> Script: Deserialize<'de>,
     {
         //Attempt to open file and parse the script
         let file = File::open(path)?;
@@ -201,20 +202,20 @@ impl Script {
     ///
     /// Will return None if the vector is empty.
     pub fn rand_greet(&self) -> Option<&String> {
-       rand::thread_rng().choose(&self.greetings)
+        rand::thread_rng().choose(&self.greetings)
     }
 
     /// Returns a random string from the `farewell` vector.
     ///
     /// Will return None if the vector is empty.
     pub fn rand_farewell(&self) -> Option<&String> {
-       rand::thread_rng().choose(&self.farewells)
+        rand::thread_rng().choose(&self.farewells)
     }
 
     /// Returns a random string from the `fallback` vector.
     ///
     /// Will return None if the vector is empty.
     pub fn rand_fallback(&self) -> Option<&String> {
-       rand::thread_rng().choose(&self.fallbacks)
+        rand::thread_rng().choose(&self.fallbacks)
     }
 }

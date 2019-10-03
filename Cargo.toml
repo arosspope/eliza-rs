@@ -1,7 +1,8 @@
 [package]
 name = "eliza"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["arosspope <andrew.pope456@gmail.com>"]
+edition = "2018"
 license = "MIT/Apache-2.0"
 homepage = "https://github.com/arosspope/eliza-rs.git"
 repository = "https://github.com/arosspope/eliza-rs.git"
