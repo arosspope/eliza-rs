@@ -31,8 +31,8 @@ mod alphabet;
 use std::error::Error;
 use std::collections::{VecDeque, HashMap};
 use regex::{Regex, Captures};
-use alphabet::Alphabet;
-use script::{Script, Keyword, Reflection, Synonym, Transform};
+use crate::alphabet::Alphabet;
+use crate::script::{Script, Keyword, Reflection, Synonym, Transform};
 
 /// An ELIZA instance.
 ///
@@ -48,7 +48,7 @@ impl Eliza {
     /// Initialise ELIZA with a script.
     ///
     /// Will return `Err` if the script at the specified location is invalid.
-    pub fn new(location: &str) -> Result<Eliza, Box<Error>> {
+    pub fn new(location: &str) -> Result<Eliza, Box<dyn Error>> {
         let e = Eliza {
             script: {
                 info!("Loading {}", location);
@@ -387,7 +387,7 @@ fn is_goto(statement: &str) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use script::{Rule};
+    use crate::script::{Rule};
 
     #[test]
     fn perm_valid(){

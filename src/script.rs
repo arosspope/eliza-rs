@@ -188,7 +188,7 @@ impl Script {
     /// Will load an ELIZA json script from the file system.
     ///
     /// Will return `Err` if the script at the specified location is invalid or non-existant.
-    pub fn load<P: AsRef<Path>>(path: P) -> Result<Script, Box<Error>>
+    pub fn load<P: AsRef<Path>>(path: P) -> Result<Script, Box<dyn Error>>
         where for <'de> Script: Deserialize<'de>
     {
         //Attempt to open file and parse the script
