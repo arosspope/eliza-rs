@@ -25,13 +25,13 @@
 //! user@foo(eliza) ~>
 //! ```
 //!
-#[macro_use] extern crate log;
+#[macro_use]
+extern crate log;
 use env_logger;
 
-
-use std::{env, io, thread, time};
-use std::io::Write;
 use eliza::Eliza;
+use std::io::Write;
+use std::{env, io, thread, time};
 
 fn main() {
     env_logger::init().unwrap();
@@ -51,7 +51,9 @@ fn main() {
         io::stdout().flush().expect("Failed to read line.");
 
         let mut input = String::new();
-        io::stdin().read_line(&mut input).expect("Failed to read line.");
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line.");
 
         match input.as_ref() {
             "/quit\n" => break,
@@ -60,7 +62,7 @@ fn main() {
                 //Insert short delay to make eliza seem like she's thinking
                 thread::sleep(time::Duration::from_millis(300));
                 println!("{}\n", eliza.respond(&input));
-            },
+            }
         }
     }
 
