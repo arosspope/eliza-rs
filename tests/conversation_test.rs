@@ -1,13 +1,18 @@
 use eliza::Eliza;
 
 #[test]
-fn load_ok() {
-    assert!(Eliza::new("scripts/doctor.json").is_ok());
+fn load_file_ok() {
+    assert!(Eliza::from_file("scripts/doctor.json").is_ok());
 }
 
 #[test]
-fn load_err() {
-    assert!(Eliza::new("scripts/not_a_script.json").is_err());
+fn load_string_ok() {
+    assert!(Eliza::from_str(r#"{"greetings": [], "farewells": [], "fallbacks": [], "transforms": [], "synonyms": [], "reflections": [], "keywords": []}"#).is_ok());
+}
+
+#[test]
+fn load_file_err() {
+    assert!(Eliza::from_file("scripts/not_a_script.json").is_err());
 }
 
 #[test]
@@ -15,7 +20,7 @@ fn convo_textbook() {
     //This is the classic conversation with ELIZA as outlined in the Article:
     //'ELIZA — A computer program for the study of natural language communication between man and
     // machine' by Joseph Weizenbaum 1966
-    let mut e = Eliza::new("scripts/doctor.json").unwrap();
+    let mut e = Eliza::from_file("scripts/doctor.json").unwrap();
 
     assert_eq!("In what way?", e.respond("Men are all alike."));
     assert_eq!(

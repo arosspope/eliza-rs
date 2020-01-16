@@ -42,7 +42,7 @@ fn main() {
         panic!("Not enough arguments");
     }
 
-    let mut eliza = Eliza::new(&args[1]).expect("Eliza failed to load");
+    let mut eliza = Eliza::from_file(&args[1]).expect("Eliza failed to load");
     println!("\nEnter '/quit' to leave the session.\n");
     println!("{}\n", eliza.greet()); //eliza greets the user
 

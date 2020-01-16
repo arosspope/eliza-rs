@@ -49,11 +49,24 @@ impl Eliza {
     /// Initialise ELIZA with a script.
     ///
     /// Will return `Err` if the script at the specified location is invalid.
-    pub fn new(location: &str) -> Result<Eliza, Box<dyn Error>> {
+    pub fn from_file(location: &str) -> Result<Eliza, Box<dyn Error>> {
         let e = Eliza {
             script: {
                 info!("Loading {}", location);
-                Script::load(location)?
+                Script::from_file(location)?
+            },
+            memory: VecDeque::new(),
+            rule_usage: HashMap::new(),
+        };
+
+        Ok(e)
+    }
+
+    pub fn from_str(script: &str) -> Result<Eliza, Box<dyn Error>> {
+        let e = Eliza {
+            script: {
+                info!("Loading script...");
+                Script::from_str(script)?
             },
             memory: VecDeque::new(),
             rule_usage: HashMap::new(),

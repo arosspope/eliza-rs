@@ -188,7 +188,7 @@ impl Script {
     /// Will load an ELIZA json script from the file system.
     ///
     /// Will return `Err` if the script at the specified location is invalid or non-existant.
-    pub fn load<P: AsRef<Path>>(path: P) -> Result<Script, Box<dyn Error>>
+    pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Script, Box<dyn Error>>
     where
         for<'de> Script: Deserialize<'de>,
     {
@@ -198,14 +198,16 @@ impl Script {
         Ok(script)
     }
 
+    pub fn from_str(val: &str) -> Result<Script, Box<dyn Error>> {
+        let script: Script = serde_json::from_str(val)?;
+        Ok(script)
+    }
+
     /// Returns a random string from the `greetings` vector.
     ///
     /// Will return None if the vector is empty.
     pub fn rand_greet(&self) -> Option<&String> {
         self.greetings.choose(&mut rand::thread_rng())
-
-        // rand::thread_rng().choose(&self.greetings)
-        // rand::Rng::
     }
 
     /// Returns a random string from the `farewell` vector.
