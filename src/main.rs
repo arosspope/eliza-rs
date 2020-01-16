@@ -34,7 +34,7 @@ use std::io::Write;
 use std::{env, io, thread, time};
 
 fn main() {
-    env_logger::init().unwrap();
+    env_logger::init();
 
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {

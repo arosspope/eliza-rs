@@ -48,7 +48,7 @@ use rand;
 use serde;
 use serde_json;
 
-use self::rand::Rng;
+use rand::seq::SliceRandom;
 use self::serde::de::Deserialize;
 use std::error::Error;
 use std::fs::File;
@@ -202,20 +202,24 @@ impl Script {
     ///
     /// Will return None if the vector is empty.
     pub fn rand_greet(&self) -> Option<&String> {
-        rand::thread_rng().choose(&self.greetings)
+        self.greetings.choose(&mut rand::thread_rng())
+
+        // rand::thread_rng().choose(&self.greetings)
+        // rand::Rng::
     }
 
     /// Returns a random string from the `farewell` vector.
     ///
     /// Will return None if the vector is empty.
     pub fn rand_farewell(&self) -> Option<&String> {
-        rand::thread_rng().choose(&self.farewells)
+        self.farewells.choose(&mut rand::thread_rng())
+        // rand::thread_rng().choose(&self.farewells)
     }
 
     /// Returns a random string from the `fallback` vector.
     ///
     /// Will return None if the vector is empty.
     pub fn rand_fallback(&self) -> Option<&String> {
-        rand::thread_rng().choose(&self.fallbacks)
+        self.fallbacks.choose(&mut rand::thread_rng())
     }
 }
