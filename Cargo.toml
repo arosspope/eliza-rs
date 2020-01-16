@@ -17,10 +17,10 @@ name = "eliza"
 doc = false
 
 [dependencies]
-regex = "*"
-rand = "*"
-serde = "*"
-serde_json = "*"
-serde_derive = "*"
-log = "*"
-env_logger = "*"
+regex = "^0.2"
+rand = "^0.3"
+serde = "^1.0"
+serde_json = "^1.0"
+serde_derive = "^1.0"
+log = "^0.3"
+env_logger = "^0.3"
