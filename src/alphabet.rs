@@ -35,7 +35,7 @@ pub trait Alphabet {
     /// Will scrub non-alphabetic characters from the text and return the scrubed version.
     ///
     fn scrub(&self, text: &str) -> String {
-        text.chars().into_iter()
+        text.chars()
             .filter(|&c| self.find_position(c).is_some()).collect()
     }
 

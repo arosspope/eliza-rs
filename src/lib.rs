@@ -48,7 +48,7 @@ impl Eliza {
     /// Initialise ELIZA with a script.
     ///
     /// Will return `Err` if the script at the specified location is invalid.
-    pub fn new(location: &str) -> Result<Eliza, Box<Error>> {
+    pub fn new(location: &str) -> Result<Eliza, Box<dyn Error>> {
         let e = Eliza {
             script: {
                 info!("Loading {}", location);
