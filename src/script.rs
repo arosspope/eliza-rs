@@ -48,8 +48,8 @@ use rand;
 use serde;
 use serde_json;
 
-use rand::seq::SliceRandom;
 use self::serde::de::Deserialize;
+use rand::seq::SliceRandom;
 use std::error::Error;
 use std::fs::File;
 use std::path::Path;
