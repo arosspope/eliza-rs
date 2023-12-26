@@ -27,7 +27,6 @@
 //!
 #[macro_use]
 extern crate log;
-use env_logger;
 
 use eliza::Eliza;
 use std::io::Write;

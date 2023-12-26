@@ -40,7 +40,6 @@ pub trait Alphabet {
     ///
     fn scrub(&self, text: &str) -> String {
         text.chars()
-            .into_iter()
             .filter(|&c| self.find_position(c).is_some())
             .collect()
     }

@@ -7,8 +7,6 @@ This rust binary is an implementation of the early 'chatbot' program **ELIZA**. 
 
 ## Introduction
 
-![convo](http://i.imgur.com/Z69mFI8.gif)
-
 ELIZA simulates conversation by implementing _pattern matching_ and a _substitution methodology_ that gives users an illusion of understanding on the part of the program. Directives on how to process input are provided by 'scripts', (written originally in MAD-Slip, now in json) which allow ELIZA to engage in discourse by following script rules. Weizenbaum’s intention was to demonstrate that the communication between man and machine is superficial. The most famous script, [DOCTOR](scripts/doctor.json), simulates a Rogerian psychotherapist.
 
 > Weizenbaum, J. (1996), _ELIZA - A computer program for the study of natural language communication between man and machine_, Communications of the ACM, vol 9, issue 1

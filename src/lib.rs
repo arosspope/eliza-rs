@@ -153,7 +153,7 @@ impl Eliza {
                             if let Some(goto) = is_goto(&assem) {
                                 //The best rule was a goto, push associated key entry to stack
                                 if let Some(entry) =
-                                    self.script.keywords.iter().find(|ref a| a.key == goto)
+                                    self.script.keywords.iter().find(|a| a.key == goto)
                                 {
                                     //Push to front of keystack and skip to it
                                     info!(
@@ -231,7 +231,7 @@ impl Eliza {
         if best_rule.is_some() {
             let key = String::from(id) + &best_rule.clone().unwrap();
             if let Some(usage) = self.rule_usage.get_mut(&key) {
-                *usage = *usage + 1;
+                *usage += 1;
             }
         }
 
@@ -244,7 +244,7 @@ fn transform(input: &str, transforms: &[Transform]) -> String {
     for t in transforms {
         let replacement = &t.word;
         for equivalent in &t.equivalents {
-            transformed = transformed.replace(equivalent, &replacement);
+            transformed = transformed.replace(equivalent, replacement);
         }
     }
 
@@ -267,7 +267,7 @@ fn populate_keystack(
         let words = get_words(&phrase);
 
         for word in words {
-            if let Some(k) = keywords.iter().find(|ref k| k.key == word) {
+            if let Some(k) = keywords.iter().find(|k| k.key == word) {
                 keystack.push(k.clone());
                 active_phrase = Some(phrase.clone());
             }
@@ -302,14 +302,14 @@ fn permutations(decomposition: &str, synonyms: &[Synonym]) -> Vec<Regex> {
     }
 
     for w in &words {
-        if w.contains("@") {
+        if w.contains('@') {
             //Format example: '(.*) my (.* @family)'
             let scrubbed = alphabet::STANDARD.scrub(w);
-            if let Some(synonym) = synonyms.iter().find(|ref s| s.word == scrubbed) {
+            if let Some(synonym) = synonyms.iter().find(|s| s.word == scrubbed) {
                 for equivalent in &synonym.equivalents {
                     permutations.push(
                         decomposition
-                            .replace(&scrubbed, &equivalent)
+                            .replace(&scrubbed, equivalent)
                             .replace('@', ""),
                     );
                 }
@@ -335,7 +335,7 @@ fn assemble(rule: &str, captures: &Captures<'_>, reflections: &[Reflection]) -> 
 
     //For each word, see if we need to swap anything out for a capture
     for w in &words {
-        if w.contains("$") {
+        if w.contains('$') {
             //Format example 'What makes you think I am $2 ?' which
             //uses the second capture group of the regex
             let scrubbed = alphabet::ALPHANUMERIC.scrub(w);
@@ -345,7 +345,7 @@ fn assemble(rule: &str, captures: &Captures<'_>, reflections: &[Reflection]) -> 
                     //Perform reflection on the capture before subsitution
                     temp = temp
                         .replace(&scrubbed, &reflect(&captures[n], reflections))
-                        .replace("$", "");
+                        .replace('$', "");
                 } else {
                     ok = false;
                     error!("{} is outside capture range in: '{}'", n, rule);
@@ -377,7 +377,7 @@ fn reflect(input: &str, reflections: &[Reflection]) -> String {
         //Find reflection pairs that are applicable to this word
         if let Some(reflect) = reflections
             .iter()
-            .find(|ref r| r.word == w || return if r.twoway { r.inverse == w } else { false })
+            .find(|r| r.word == w || return if r.twoway { r.inverse == w } else { false })
         {
             if reflect.word == w {
                 reflected_phrase.push_str(&reflect.inverse);
@@ -392,7 +392,7 @@ fn reflect(input: &str, reflections: &[Reflection]) -> String {
             reflected_phrase.push_str(&w);
         }
 
-        reflected_phrase.push_str(" "); //put a space after each word
+        reflected_phrase.push(' '); //put a space after each word
     }
 
     reflected_phrase.trim().to_string()
